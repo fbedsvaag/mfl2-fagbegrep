@@ -1,0 +1,746 @@
+<!DOCTYPE html>
+<html lang="nb">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Fagbegrep – MFL2</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  :root {
+    --bg: #f5f2ed;
+    --card: #ffffff;
+    --card-back: #1a2238;
+    --text: #1a2238;
+    --text-light: #f5f2ed;
+    --accent: #c2553a;
+    --accent-hover: #a8432c;
+    --muted: #8a8580;
+    --border: #d8d3cc;
+    --shadow: 0 8px 32px rgba(26,34,56,0.10);
+    --radius: 14px;
+  }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  header {
+    text-align: center;
+    padding: 2.5rem 1rem 1rem;
+    max-width: 600px;
+  }
+
+  header h1 {
+    font-family: 'DM Serif Display', serif;
+    font-size: 2rem;
+    font-weight: 400;
+    letter-spacing: -0.02em;
+    margin-bottom: 0.3rem;
+  }
+
+  header p {
+    color: var(--muted);
+    font-size: 0.9rem;
+  }
+
+  /* MODE SELECTOR */
+  .mode-selector {
+    display: flex;
+    gap: 0.5rem;
+    justify-content: center;
+    margin: 1.5rem 0;
+    flex-wrap: wrap;
+    padding: 0 1rem;
+  }
+
+  .mode-btn {
+    padding: 0.55rem 1.1rem;
+    border: 1.5px solid var(--border);
+    border-radius: 99px;
+    background: var(--card);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.82rem;
+    font-weight: 500;
+    color: var(--text);
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+
+  .mode-btn:hover { border-color: var(--accent); color: var(--accent); }
+  .mode-btn.active {
+    background: var(--accent);
+    border-color: var(--accent);
+    color: #fff;
+  }
+
+  /* TOPIC GRID */
+  .topic-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 0.5rem;
+    max-width: 640px;
+    width: 100%;
+    padding: 0 1rem;
+    margin-bottom: 1.5rem;
+  }
+
+  .topic-btn {
+    padding: 0.6rem 0.8rem;
+    border: 1.5px solid var(--border);
+    border-radius: 10px;
+    background: var(--card);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.8rem;
+    font-weight: 500;
+    color: var(--text);
+    cursor: pointer;
+    transition: all 0.2s;
+    text-align: left;
+  }
+
+  .topic-btn:hover { border-color: var(--accent); }
+  .topic-btn.active { background: var(--accent); border-color: var(--accent); color: #fff; }
+
+  .topic-btn span {
+    font-size: 0.72rem;
+    color: var(--muted);
+    display: block;
+    margin-top: 2px;
+  }
+
+  .topic-btn.active span { color: rgba(255,255,255,0.7); }
+
+  /* CARD AREA */
+  .card-area {
+    width: 100%;
+    max-width: 540px;
+    padding: 0 1rem;
+    perspective: 1000px;
+    margin-bottom: 1rem;
+  }
+
+  .card-container {
+    width: 100%;
+    min-height: 260px;
+    cursor: pointer;
+    position: relative;
+    transition: transform 0.5s;
+    transform-style: preserve-3d;
+  }
+
+  .card-container.flipped { transform: rotateY(180deg); }
+
+  .card-face {
+    position: absolute;
+    inset: 0;
+    backface-visibility: hidden;
+    border-radius: var(--radius);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 2rem 2.2rem;
+    box-shadow: var(--shadow);
+  }
+
+  .card-front {
+    background: var(--card);
+  }
+
+  .card-front .card-topic {
+    font-size: 0.72rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--accent);
+    margin-bottom: 0.8rem;
+  }
+
+  .card-front .card-term {
+    font-family: 'DM Serif Display', serif;
+    font-size: 1.65rem;
+    text-align: center;
+    line-height: 1.3;
+  }
+
+  .card-front .card-hint {
+    margin-top: 1.2rem;
+    font-size: 0.78rem;
+    color: var(--muted);
+  }
+
+  .card-back {
+    background: var(--card-back);
+    color: var(--text-light);
+    transform: rotateY(180deg);
+  }
+
+  .card-back .card-term-small {
+    font-family: 'DM Serif Display', serif;
+    font-size: 1rem;
+    margin-bottom: 0.8rem;
+    color: var(--accent);
+  }
+
+  .card-back .card-definition {
+    font-size: 0.92rem;
+    line-height: 1.65;
+    text-align: center;
+    max-width: 420px;
+  }
+
+  /* CONTROLS */
+  .controls {
+    display: flex;
+    gap: 0.8rem;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 1rem;
+    flex-wrap: wrap;
+  }
+
+  .nav-btn {
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    border: 1.5px solid var(--border);
+    background: var(--card);
+    font-size: 1.2rem;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s;
+    color: var(--text);
+  }
+
+  .nav-btn:hover { border-color: var(--accent); color: var(--accent); }
+
+  .progress {
+    font-size: 0.85rem;
+    font-weight: 500;
+    color: var(--muted);
+    min-width: 80px;
+    text-align: center;
+  }
+
+  .shuffle-btn {
+    padding: 0.5rem 1rem;
+    border: 1.5px solid var(--border);
+    border-radius: 99px;
+    background: var(--card);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.8rem;
+    font-weight: 500;
+    cursor: pointer;
+    color: var(--text);
+    transition: all 0.2s;
+  }
+
+  .shuffle-btn:hover { border-color: var(--accent); color: var(--accent); }
+
+  /* PROGRESS BAR */
+  .progress-bar-container {
+    max-width: 540px;
+    width: 100%;
+    padding: 0 1rem;
+    margin-bottom: 2rem;
+  }
+
+  .progress-bar {
+    height: 4px;
+    background: var(--border);
+    border-radius: 2px;
+    overflow: hidden;
+  }
+
+  .progress-bar-fill {
+    height: 100%;
+    background: var(--accent);
+    border-radius: 2px;
+    transition: width 0.3s;
+  }
+
+  /* KEYBOARD HINT */
+  .keyboard-hint {
+    text-align: center;
+    font-size: 0.75rem;
+    color: var(--muted);
+    padding-bottom: 2rem;
+  }
+
+  .keyboard-hint kbd {
+    display: inline-block;
+    padding: 2px 7px;
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.72rem;
+    background: var(--card);
+    margin: 0 1px;
+  }
+
+  /* EMPTY STATE */
+  .empty-state {
+    text-align: center;
+    padding: 3rem 1rem;
+    color: var(--muted);
+  }
+
+  .empty-state p { font-size: 0.95rem; }
+
+  @media (max-width: 500px) {
+    header h1 { font-size: 1.6rem; }
+    .card-front .card-term { font-size: 1.35rem; }
+    .card-face { padding: 1.5rem 1.4rem; }
+    .topic-grid { grid-template-columns: repeat(2, 1fr); }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <h1>Fagbegrep MFL2</h1>
+  <p>Trykk på kortet for å se forklaringen</p>
+</header>
+
+<div class="mode-selector">
+  <button class="mode-btn active" onclick="setMode('all')">Alle begreper</button>
+  <button class="mode-btn" onclick="setMode('topic')">Velg tema</button>
+</div>
+
+<div class="topic-grid" id="topicGrid" style="display:none"></div>
+
+<div class="card-area" id="cardArea" style="display:none">
+  <div class="card-container" id="card" onclick="flipCard()">
+    <div class="card-face card-front">
+      <div class="card-topic" id="cardTopic"></div>
+      <div class="card-term" id="cardTerm"></div>
+      <div class="card-hint">Trykk for å snu</div>
+    </div>
+    <div class="card-face card-back">
+      <div class="card-term-small" id="cardTermBack"></div>
+      <div class="card-definition" id="cardDef"></div>
+    </div>
+  </div>
+</div>
+
+<div class="controls" id="controls" style="display:none">
+  <button class="nav-btn" onclick="prevCard()">←</button>
+  <div class="progress" id="progress"></div>
+  <button class="nav-btn" onclick="nextCard()">→</button>
+  <button class="shuffle-btn" onclick="shuffleDeck()">Stokk om</button>
+</div>
+
+<div class="progress-bar-container" id="progressBarContainer" style="display:none">
+  <div class="progress-bar"><div class="progress-bar-fill" id="progressFill"></div></div>
+</div>
+
+<div class="empty-state" id="emptyState" style="display:none">
+  <p>Velg ett eller flere temaer for å starte.</p>
+</div>
+
+<div class="keyboard-hint" id="keyHint" style="display:none">
+  <kbd>←</kbd> <kbd>→</kbd> bla &nbsp; <kbd>mellomrom</kbd> snu
+</div>
+
+<script>
+const TERMS = [
+  // Situasjonsanalyse og bransjeanalyse
+  {t:"Arbeidsbetingelser",d:"Forhold som påvirker virksomhetens beslutninger og markedsføring. Deles inn i interne (innad i virksomheten) og eksterne (utenfor virksomheten).",c:"Situasjonsanalyse og bransjeanalyse"},
+  {t:"Interne arbeidsbetingelser",d:"Forhold i virksomheten som påvirker markedsstrategier og beslutninger, for eksempel økonomi, ansattes kompetanse og produktene som tilbys.",c:"Situasjonsanalyse og bransjeanalyse"},
+  {t:"Eksterne arbeidsbetingelser",d:"Ytre faktorer som påvirker virksomhetens markedsstrategier og beslutninger, for eksempel konkurrentenes markedsføring og markedssituasjonen.",c:"Situasjonsanalyse og bransjeanalyse"},
+  {t:"Situasjonsanalyse",d:"Analyse av virksomhetens interne og eksterne arbeidsbetingelser.",c:"Situasjonsanalyse og bransjeanalyse"},
+  {t:"SWOT-analyse",d:"Analyseskjema for å analysere interne arbeidsbetingelser (sterke og svake sider) og eksterne arbeidsbetingelser (muligheter og trusler).",c:"Situasjonsanalyse og bransjeanalyse"},
+  {t:"Bransje",d:"Samlebetegnelse på virksomheter som utfører samme type oppgaver.",c:"Situasjonsanalyse og bransjeanalyse"},
+  {t:"Bransjeanalyse",d:"Kartlegging av konkurransen i en bransje ved hjelp av Porters konkurransekrefter.",c:"Situasjonsanalyse og bransjeanalyse"},
+  {t:"Porters konkurransekrefter",d:"Modell som identifiserer fem krefter som bestemmer konkurranseintensiteten: nye aktører, substitutter, kundenes forhandlingsmakt, leverandørenes forhandlingsmakt og rivalisering mellom eksisterende aktører.",c:"Situasjonsanalyse og bransjeanalyse"},
+  {t:"Konkurrentanalyse",d:"Analyse av konkurrentene som ledd i situasjonsanalysen.",c:"Situasjonsanalyse og bransjeanalyse"},
+  {t:"Konkurrenter",d:"De som kjemper om de samme kundene på et marked.",c:"Situasjonsanalyse og bransjeanalyse"},
+  {t:"Konkurranseintensitet",d:"Graden av rivalisering mellom eksisterende aktører i en bransje.",c:"Situasjonsanalyse og bransjeanalyse"},
+  {t:"Substitutt",d:"Produkt som ikke er identisk med produktene i bransjen, men som likevel kan erstatte dem.",c:"Situasjonsanalyse og bransjeanalyse"},
+  {t:"Nyetablering",d:"Trusselen fra nye aktører som etablerer seg i en bransje.",c:"Situasjonsanalyse og bransjeanalyse"},
+  {t:"Trend",d:"En langsiktig utviklingsretning i markedet eller samfunnet som påvirker forbrukernes atferd og virksomhetenes strategier.",c:"Situasjonsanalyse og bransjeanalyse"},
+  {t:"Globalisering",d:"Økende grad av samhandling, integrasjon og gjensidig avhengighet mellom folk og stater.",c:"Situasjonsanalyse og bransjeanalyse"},
+  {t:"Digitalisering",d:"Tilrettelegging for å utvikle, håndtere og utnytte digital informasjon ved hjelp av informasjonsteknologi.",c:"Situasjonsanalyse og bransjeanalyse"},
+  {t:"Deregulering",d:"Når myndighetene fjerner eller reduserer offentlige reguleringer i et marked.",c:"Situasjonsanalyse og bransjeanalyse"},
+  {t:"Regulering",d:"Offentlige regler og lover som styrer hvordan virksomheter kan operere i et marked.",c:"Situasjonsanalyse og bransjeanalyse"},
+
+  // Mål, strategier og forretningsidé
+  {t:"Visjon",d:"Et fremtidsbilde og noe vi ønsker skal skje.",c:"Mål, strategier og forretningsidé"},
+  {t:"Misjon",d:"Et uttrykk for hvorfor virksomheten eksisterer, og hva den kan tilby kundene.",c:"Mål, strategier og forretningsidé"},
+  {t:"Forretningsidé",d:"De forretningsmuligheter som vi finner fram til ut fra markedsbehov, kunder, produkter og konkurransefortrinn.",c:"Mål, strategier og forretningsidé"},
+  {t:"Mål",d:"En ønsket tilstand på et fremtidig tidspunkt.",c:"Mål, strategier og forretningsidé"},
+  {t:"Overordnede mål",d:"Selve grunnlaget for en organisasjons virksomhet. Et viktig overordnet mål for en bedrift er størst mulig overskudd.",c:"Mål, strategier og forretningsidé"},
+  {t:"Strategi",d:"Tiltak for å nå mål.",c:"Mål, strategier og forretningsidé"},
+  {t:"Overordnede strategier",d:"Strategier for å nå de overordnede målene.",c:"Mål, strategier og forretningsidé"},
+  {t:"Markedsmål",d:"Mål for virksomhetens markedsføring i markedsplanleggingsperioden, vanligvis ett år.",c:"Mål, strategier og forretningsidé"},
+  {t:"Prestasjonsmål (KPI)",d:"Barometer som varsler virksomheten om at den går i riktig eller feil retning. Kalles gjerne Key Performance Indicators.",c:"Mål, strategier og forretningsidé"},
+  {t:"Markedsplan",d:"Plan for markedsføringen det kommende året, som inneholder situasjonsanalyse, markedsmål, markedsstrategier og kampanjeplaner.",c:"Mål, strategier og forretningsidé"},
+  {t:"Markedsplanlegging",d:"En bevisst og systematisk innsamling og analyse av markedsdata, fastsetting av markedsmål og markedsstrategier for å nå målene.",c:"Mål, strategier og forretningsidé"},
+
+  // Vekststrategier
+  {t:"Vekststrategier",d:"Markedsføringsstrategier for hvordan virksomheten skal vokse: markedsinntrengning, markedsutvikling, produktutvikling og diversifikasjon.",c:"Vekststrategier"},
+  {t:"Markedsinntrengning",d:"Vekststrategi som går ut på å øke markedsandelene for eksisterende produkter.",c:"Vekststrategier"},
+  {t:"Markedsutvikling",d:"Vekststrategi som går ut på å finne nye markeder for eksisterende produkter.",c:"Vekststrategier"},
+  {t:"Produktutvikling",d:"Vekststrategi som går ut på å lansere nye produkter på samme marked.",c:"Vekststrategier"},
+  {t:"Diversifikasjon",d:"Vekststrategi som går ut på å satse på nye markeder med helt nye produkter.",c:"Vekststrategier"},
+  {t:"Innovasjon",d:"Et helt nytt produkt eller en helt ny løsning eller tjeneste.",c:"Vekststrategier"},
+
+  // Konkurransestrategier
+  {t:"Konkurransestrategier",d:"Strategier med utgangspunkt i konkurransesituasjonen: markedslederstrategi, markedsutfordrerstrategi, markedsfølgerstrategi og nisjestrategi.",c:"Konkurransestrategier"},
+  {t:"Markedslederstrategi",d:"Konkurransestrategi som går ut på å være den dominerende i markedet.",c:"Konkurransestrategier"},
+  {t:"Markedsutfordrerstrategi",d:"Konkurransestrategi som går ut på å ta opp kampen med markedslederen.",c:"Konkurransestrategier"},
+  {t:"Markedsfølgerstrategi",d:"Konkurransestrategi som går ut på å etterligne markedslederens produkter etter at de er kommet på markedet.",c:"Konkurransestrategier"},
+  {t:"Nisjestrategi",d:"Konkurransestrategi som går ut på å utnytte spesialkompetanse og konsentrere seg om små og særegne segmenter.",c:"Konkurransestrategier"},
+  {t:"Differensiering",d:"Det å gjøre et produkt eller en tjeneste forskjellig fra konkurrentenes, slik at det oppleves som unikt.",c:"Konkurransestrategier"},
+  {t:"Pioner",d:"En virksomhet som er først ute med et nytt produkt eller en tjeneste i et marked.",c:"Konkurransestrategier"},
+  {t:"Stordriftsfordeler",d:"Kostnadsfordeler som oppstår når volum øker slik at kostnaden per enhet synker.",c:"Konkurransestrategier"},
+
+  // Segmentering og målgruppe
+  {t:"Marked",d:"Samling av kjøpere og selgere som forhandler om et spesielt produkt eller grupper av produkter.",c:"Segmentering og målgruppe"},
+  {t:"Markedssegmentering",d:"Oppsplitting av markedet i delmarkeder med visse fellestrekk.",c:"Segmentering og målgruppe"},
+  {t:"Segment",d:"En avgrenset del av et marked med felles kjennetegn.",c:"Segmentering og målgruppe"},
+  {t:"Segmenteringskriterier",d:"Variablene man bruker for å dele markedet inn i segmenter: geografiske, demografiske, psykografiske og atferdsbaserte.",c:"Segmentering og målgruppe"},
+  {t:"Geografisk segmentering",d:"Segmentering basert på geografiske variabler som land, region, by eller klima.",c:"Segmentering og målgruppe"},
+  {t:"Demografisk segmentering",d:"Segmentering basert på målbare kjennetegn som alder, kjønn, inntekt og utdanning.",c:"Segmentering og målgruppe"},
+  {t:"Psykografisk segmentering",d:"Segmentering basert på livsstil, verdier, interesser og personlighetstrekk.",c:"Segmentering og målgruppe"},
+  {t:"Atferdssegmentering",d:"Segmentering basert på forbrukernes kjøps- og bruksatferd, for eksempel kjøpshyppighet og merkelojalitet.",c:"Segmentering og målgruppe"},
+  {t:"Målgruppe",d:"Utvalgt segment som vi ønsker å nå i markedsføringen.",c:"Segmentering og målgruppe"},
+  {t:"Udifferensiert målgruppevalg",d:"Strategi der virksomheten retter seg mot hele markedet med ett og samme markedstilbud.",c:"Segmentering og målgruppe"},
+  {t:"Differensiert målgruppevalg",d:"Strategi der virksomheten velger flere segmenter og utvikler et tilpasset markedstilbud til hvert av dem.",c:"Segmentering og målgruppe"},
+  {t:"Konsentrert målgruppevalg",d:"Strategi der virksomheten velger ett segment og konsentrerer alle ressurser om å betjene dette best mulig.",c:"Segmentering og målgruppe"},
+  {t:"Individuelt målgruppevalg",d:"Strategi der virksomheten tilpasser markedstilbudet til den enkelte kunde.",c:"Segmentering og målgruppe"},
+  {t:"Nisjemarkedsføring",d:"Markedsføring rettet mot et smalt og spesifikt segment der virksomheten kan utnytte spesialkompetanse.",c:"Segmentering og målgruppe"},
+  {t:"Behov",d:"Å trenge noe som kan oppheve en fysiologisk, psykologisk eller praktisk mangeltilstand.",c:"Segmentering og målgruppe"},
+  {t:"Nytte",d:"Den verdien eller tilfredsstillelsen en forbruker opplever ved å bruke et produkt.",c:"Segmentering og målgruppe"},
+  {t:"Brukerstatus",d:"Klassifisering av forbrukere etter om de er ikke-brukere, potensielle brukere, førstegangsbrukere eller faste brukere.",c:"Segmentering og målgruppe"},
+  {t:"Bruksgrad",d:"Hvor mye av et produkt en forbruker bruker i en gitt periode.",c:"Segmentering og målgruppe"},
+  {t:"Kultur",d:"Ideer, verdier, regler og normer som et menneske overtar fra andre i et samfunn og forsøker å bringe videre.",c:"Segmentering og målgruppe"},
+  {t:"Subkultur",d:"En gruppe innenfor en større kultur som deler bestemte verdier og atferdsmønstre som skiller seg fra hovedkulturen.",c:"Segmentering og målgruppe"},
+
+  // Merkevare og posisjonering
+  {t:"Merkevare",d:"Et standardisert produkt med et merke som skal skape gjenkjenning og tilleggsfordeler hos kjøperne.",c:"Merkevare og posisjonering"},
+  {t:"Merkevarebygging",d:"Arbeidet med å gi en merkevare verdier (forventninger), slik at kjøperen opplever å kjøpe mer enn bare produktet.",c:"Merkevare og posisjonering"},
+  {t:"Merkevareplattform",d:"Merkevarens DNA: merkevarekjerne, merkepersonlighet og merkeverdier.",c:"Merkevare og posisjonering"},
+  {t:"Merkepersonlighet",d:"De menneskelige egenskapene som knyttes til en merkevare.",c:"Merkevare og posisjonering"},
+  {t:"Merkeverdi",d:"Tilleggsfordelen som produktet oppnår hos forbrukerne på grunn av merket.",c:"Merkevare og posisjonering"},
+  {t:"Merkekunnskap",d:"Kunnskapen, oppfatningen eller tankene forbrukeren har om en merkevare.",c:"Merkevare og posisjonering"},
+  {t:"Merkekjennskap",d:"Kjennskapen forbrukerne har til en bestemt merkevare.",c:"Merkevare og posisjonering"},
+  {t:"Merkekommunikasjon",d:"Måten vi kommuniserer med markedet på som et ledd i merkevarebyggingen.",c:"Merkevare og posisjonering"},
+  {t:"Merkeutvidelse",d:"Strategi for å bruke et eksisterende merke i nye sammenhenger, enten med mormerket eller et helt nytt merke.",c:"Merkevare og posisjonering"},
+  {t:"Merkeelement",d:"Alt som omgir merkevaren: logo, farge, slagord, design og symboler.",c:"Merkevare og posisjonering"},
+  {t:"Varemerke",d:"Et kjennetegn for en vare eller tjeneste som skiller den fra andre varer og tjenester.",c:"Merkevare og posisjonering"},
+  {t:"Logo",d:"Et unikt symbol (bokstaver, tall eller figur) som letter identifikasjonen av en virksomhet.",c:"Merkevare og posisjonering"},
+  {t:"Posisjonering",d:"Arbeidet med å skape en bestemt oppfatning av et produkts egenart i folks bevissthet, i forhold til konkurrentene.",c:"Merkevare og posisjonering"},
+  {t:"Posisjon",d:"Den plassen en merkevare har i forbrukerens bevissthet i forhold til konkurrerende produkter.",c:"Merkevare og posisjonering"},
+  {t:"Top of mind awareness",d:"Når en merkevare er den første forbrukeren tenker på innenfor en bestemt produktkategori.",c:"Merkevare og posisjonering"},
+  {t:"Lojalitet",d:"Graden av tilknytning en kunde har til en merkevare, som gjør at kunden gjentatte ganger velger det samme.",c:"Merkevare og posisjonering"},
+
+  // Produkt
+  {t:"Produkt",d:"Alt som kan tilbys markedet for å dekke behov.",c:"Produkt"},
+  {t:"Produktløftet",d:"Det en virksomhet lover kunden at produktet skal levere.",c:"Produkt"},
+  {t:"Produktstrategi",d:"Markedsstrategier med utgangspunkt i produktet, for eksempel sortiment, produktutvikling og service.",c:"Produkt"},
+  {t:"Metaprodukt",d:"Det utvidede produktbegrepet som inkluderer tilleggstjenester, garantier og service utover kjerneproduktet.",c:"Produkt"},
+  {t:"Produkttesting",d:"Systematisk utprøving av et produkt for å vurdere kvalitet og markedspotensial.",c:"Produkt"},
+  {t:"Heterogene produkter",d:"Produkter som skiller seg fra hverandre slik at forbrukeren ikke oppfatter dem som likeverdige.",c:"Produkt"},
+  {t:"Homogene produkter",d:"Produkter som er så like at forbrukeren oppfatter dem som identiske.",c:"Produkt"},
+
+  // Pris
+  {t:"Pris",d:"Det forbrukeren må betale for en vare eller tjeneste.",c:"Pris og prisstrategi"},
+  {t:"Prisstrategi",d:"Aktiviteter for å finne produktets optimale pris i forbindelse med bedriftens mål.",c:"Pris og prisstrategi"},
+  {t:"Kostnadsbasert prissetting",d:"Prissettingsmetode der selgeren beregner en viss prosent i tillegg til innkjøpsprisen.",c:"Pris og prisstrategi"},
+  {t:"Konkurransebasert prissetting",d:"Prissettingsmetode der prisen fastsettes med utgangspunkt i konkurrentenes priser.",c:"Pris og prisstrategi"},
+  {t:"Verdibasert prissetting",d:"Prissettingsmetode der prisen beregnes ut fra hva markedet er villig til å betale.",c:"Pris og prisstrategi"},
+  {t:"Dynamisk prising",d:"Prissettingsmetode der prisen endres i sanntid basert på etterspørsel, tidspunkt eller kundesegment.",c:"Pris og prisstrategi"},
+  {t:"Kontekstuell prising",d:"Prissetting som avhenger av i hvilken sammenheng produktet kjøpes.",c:"Pris og prisstrategi"},
+  {t:"Psykologisk prising",d:"Prissettingsmetode som spiller på forbrukernes følelser.",c:"Pris og prisstrategi"},
+  {t:"Tallet 9",d:"Prispsykologisk virkemiddel der priser settes like under et rundt tall for å virke lavere.",c:"Pris og prisstrategi"},
+  {t:"Tallet i midten",d:"Prispsykologisk prinsipp der forbrukere tenderer til å velge det midterste prisalternativet.",c:"Pris og prisstrategi"},
+  {t:"Terskelverdi",d:"Det prisnivået der forbrukeren opplever at prisen går fra akseptabel til for høy.",c:"Pris og prisstrategi"},
+  {t:"Lokkedue",d:"Prispsykologisk virkemiddel der man tilbyr et åpenbart dårligere alternativ for å styre kunden mot et annet.",c:"Pris og prisstrategi"},
+  {t:"Kontrast",d:"Prispsykologisk virkemiddel der produkter med ulik pris plasseres ved siden av hverandre for å påvirke verdioppfatningen.",c:"Pris og prisstrategi"},
+  {t:"Rabatt",d:"Prisavslag som gis ved enkelthandlinger, for eksempel ved kontant betaling eller stort kvantum.",c:"Pris og prisstrategi"},
+  {t:"Bonus",d:"En prisfordel kunden får etter en gitt periode hvis avtalte aktiviteter er utført.",c:"Pris og prisstrategi"},
+  {t:"Avgift",d:"Offentlig pålagt kostnad som legges til prisen, for eksempel merverdiavgift.",c:"Pris og prisstrategi"},
+  {t:"Etterspørsel",d:"Den mengden av en vare som kjøperne ønsker å kjøpe til en gitt pris.",c:"Pris og prisstrategi"},
+  {t:"Tilbud",d:"Den mengden av en vare som selgerne ønsker å selge til en gitt pris.",c:"Pris og prisstrategi"},
+
+  // Distribusjon
+  {t:"Distribusjon",d:"Alle aktiviteter som er nødvendige for å gjøre produktet tilgjengelig for kjøperne.",c:"Distribusjon"},
+  {t:"Distribusjonsform",d:"Om distribusjonen skal skje direkte eller ved hjelp av mellomledd.",c:"Distribusjon"},
+  {t:"Direkte distribusjon",d:"Distribusjonsform der produktet går fra produsent til forbruker uten mellomledd.",c:"Distribusjon"},
+  {t:"Indirekte distribusjon",d:"Distribusjon via mellomledd.",c:"Distribusjon"},
+  {t:"Distribusjonsgrad",d:"Valg mellom intensiv, selektiv eller eksklusiv distribusjon.",c:"Distribusjon"},
+  {t:"Intensiv distribusjon",d:"Distribusjonsstrategi som går ut på å få flest mulig til å selge produktet.",c:"Distribusjon"},
+  {t:"Selektiv distribusjon",d:"Distribusjonsstrategi som går ut på å velge spesielle detaljister.",c:"Distribusjon"},
+  {t:"Eksklusiv distribusjon",d:"Distribusjonsstrategi som går ut på å gi én forhandler enerett.",c:"Distribusjon"},
+  {t:"Distribusjonskanal",d:"Veien produktet følger fra produsent til sluttbruker.",c:"Distribusjon"},
+  {t:"Distribusjonsledd",d:"Deltaker i distribusjonen, for eksempel grossist eller detaljist.",c:"Distribusjon"},
+  {t:"Distribusjonsstrategi",d:"Strategi som innebærer valg av distribusjonsform, distribusjonsgrad og distribusjonskanal.",c:"Distribusjon"},
+  {t:"Grossist",d:"Et mellomledd mellom produsenten og detaljisten.",c:"Distribusjon"},
+  {t:"Detaljist",d:"Det siste leddet i verdikjeden, i dagligtale kalt butikk.",c:"Distribusjon"},
+  {t:"Distributør",d:"Produsentens salgsrepresentant som markedsfører produktene og skaffer ordrer fra detaljister.",c:"Distribusjon"},
+  {t:"Agent",d:"Næringsdrivende som opptrer eller handler på vegne av en annen.",c:"Distribusjon"},
+  {t:"Kommisjonær",d:"En næringsdrivende som selger produkter i eget navn, mens en annen eier produktene.",c:"Distribusjon"},
+  {t:"Leverandør",d:"Den som selger varer eller tjenester til et annet ledd i distribusjonskanalen.",c:"Distribusjon"},
+  {t:"Verdikjede",d:"Kjeden av aktiviteter i produksjon og distribusjon som tilfører produktet verdi.",c:"Distribusjon"},
+  {t:"Makt",d:"I en verdikjede: evnen et ledd har til å påvirke eller kontrollere andre ledd.",c:"Distribusjon"},
+  {t:"Avhengighet",d:"Graden av gjensidig avhengighet mellom leddene i en verdikjede.",c:"Distribusjon"},
+  {t:"Vertikal integrasjon",d:"Strategi der distribusjonsledd slår seg sammen eller kjøper opp ledd bakover eller forover i kanalen.",c:"Distribusjon"},
+  {t:"Horisontal integrasjon",d:"Sammenslutning av ledd på samme nivå i distribusjonskanalen for å oppnå stordriftsfordeler.",c:"Distribusjon"},
+  {t:"Bakover-integrasjon",d:"Når et ledd kjøper opp eller tar kontroll over leverandørleddet.",c:"Distribusjon"},
+  {t:"Forover-integrasjon",d:"Når et ledd kjøper opp eller tar kontroll over et ledd fremover i kjeden.",c:"Distribusjon"},
+  {t:"Vertikalt samarbeid",d:"Samarbeid mellom distribusjonsledd på forskjellige nivåer.",c:"Distribusjon"},
+  {t:"Horisontalt samarbeid",d:"Samarbeid mellom ledd på samme nivå i distribusjonskanalen.",c:"Distribusjon"},
+  {t:"Multikanalstrategi",d:"Distribusjonsstrategi der virksomheten behandler hver kanal for seg.",c:"Distribusjon"},
+  {t:"Omnikanalstrategi",d:"Distribusjonsstrategi der kunden kan se, oppleve og handle overalt, og kanalene samarbeider enhetlig.",c:"Distribusjon"},
+  {t:"Sirkulær verdikjede",d:"Verdikjede der de involverte partene tar fullt ansvar for produktenes livssyklus.",c:"Distribusjon"},
+
+  // Kommunikasjon
+  {t:"Markedskommunikasjon",d:"Tiltak fra en identifiserbar avsender for å informere og påvirke mottakere for å øke avsetning av varer og tjenester.",c:"Kommunikasjon og mediemiks"},
+  {t:"Kommunikasjonsstrategi",d:"Strategi vi benytter når vi formidler informasjon til markedet.",c:"Kommunikasjon og mediemiks"},
+  {t:"Kommunikasjonsform",d:"Typer av kommunikasjon til markedet, for eksempel reklame, PR og salgsfremmende tiltak.",c:"Kommunikasjon og mediemiks"},
+  {t:"Kommunikasjonskanal",d:"Midlet eller mediet vi benytter for å bringe budskapet ut til målgruppen.",c:"Kommunikasjon og mediemiks"},
+  {t:"Kommunikasjonsmiks",d:"Kommunikasjonsformene vi benytter i de ulike kanalene.",c:"Kommunikasjon og mediemiks"},
+  {t:"Mediemiks",d:"Samlingen av mediekanalene vi benytter i kommunikasjonen med markedet.",c:"Kommunikasjon og mediemiks"},
+  {t:"Budskap",d:"Informasjonen vi vil formidle.",c:"Kommunikasjon og mediemiks"},
+  {t:"Appell",d:"Virkemiddel i kommunikasjon: rasjonell (logos), emosjonell (patos) og moralsk (etos).",c:"Kommunikasjon og mediemiks"},
+  {t:"Reklame",d:"Betalt, ikke-personlig kommunikasjon fra en identifiserbar avsender, rettet mot en målgruppe gjennom massemedier.",c:"Kommunikasjon og mediemiks"},
+  {t:"PR",d:"Kommunikasjonsform som handler om å bygge omdømme gjennom relasjoner med medier, interessenter og offentligheten.",c:"Kommunikasjon og mediemiks"},
+  {t:"Salgsfremmende tiltak",d:"Kortsiktige virkemidler som skal stimulere til økt salg, for eksempel konkurranser, kuponger og gratisprøver.",c:"Kommunikasjon og mediemiks"},
+  {t:"Personlig kommunikasjon",d:"Kommunikasjon mellom mennesker.",c:"Kommunikasjon og mediemiks"},
+  {t:"Ikke-personlig kommunikasjon",d:"Kommunikasjon ved bruk av medier, for eksempel TV, radio og sosiale medier.",c:"Kommunikasjon og mediemiks"},
+  {t:"Direkte markedsføring",d:"Kommunikasjon direkte til den enkelte forbruker, for eksempel via e-post eller SMS.",c:"Kommunikasjon og mediemiks"},
+  {t:"POEM",d:"Kommunikasjonsmodell som skiller mellom kjøpte (paid), eide (owned) og fortjente (earned) medier.",c:"Kommunikasjon og mediemiks"},
+  {t:"Kjøpte medier",d:"Kommunikasjonskanaler virksomheten betaler for, for eksempel annonseplass og sponsede innlegg.",c:"Kommunikasjon og mediemiks"},
+  {t:"Eide medier",d:"Kanaler virksomheten selv eier og kontrollerer, for eksempel egne nettsider og nyhetsbrev.",c:"Kommunikasjon og mediemiks"},
+  {t:"Fortjente medier",d:"Medieomtale virksomheten oppnår uten å betale, for eksempel presseomtale og delinger.",c:"Kommunikasjon og mediemiks"},
+  {t:"Influensermarkedsføring",d:"Markedsføring som benytter meningsskapere og trendsettere til å utføre kommunikasjonen.",c:"Kommunikasjon og mediemiks"},
+  {t:"Innholdsmarkedsføring",d:"Strategi der virksomheten skaper og deler verdifullt innhold for å tiltrekke en definert målgruppe.",c:"Kommunikasjon og mediemiks"},
+  {t:"Viral markedsføring",d:"En «snakkis» som deles på sosiale medier.",c:"Kommunikasjon og mediemiks"},
+  {t:"Munn-til-munn-markedsføring",d:"Markedsføring som spres ved at kunder forteller andre om sine erfaringer.",c:"Kommunikasjon og mediemiks"},
+  {t:"SEO",d:"Søkemotoroptimalisering: arbeidet med å få egen nettside så høyt opp som mulig hos søkemotorene.",c:"Kommunikasjon og mediemiks"},
+  {t:"Programmatisk annonsering",d:"System der annonseplassen kjøpes og selges automatisk av dataprogrammer via en annonsebørs.",c:"Kommunikasjon og mediemiks"},
+  {t:"Nettannonsering",d:"Betalt annonsering på internett, inkludert bannerannonser, søkeordsannonsering og SoMe-annonser.",c:"Kommunikasjon og mediemiks"},
+  {t:"Sosiale medier (SoMe)",d:"Digitale plattformer der brukere kan skape, dele og samhandle rundt innhold.",c:"Kommunikasjon og mediemiks"},
+  {t:"Digitale kanaler",d:"Kommunikasjonskanaler som bruker digital teknologi, for eksempel nettsider, SoMe og apper.",c:"Kommunikasjon og mediemiks"},
+  {t:"Analoge kanaler",d:"Tradisjonelle kommunikasjonskanaler som ikke er digitale, for eksempel trykte aviser og plakater.",c:"Kommunikasjon og mediemiks"},
+  {t:"Trykte kanaler",d:"Kommunikasjonskanaler basert på trykt materiale, for eksempel aviser, magasiner og brosjyrer.",c:"Kommunikasjon og mediemiks"},
+  {t:"Podkast",d:"Redigert lydprogram som distribueres på internett.",c:"Kommunikasjon og mediemiks"},
+  {t:"Sponsorat",d:"Avtale der en virksomhet gir støtte i bytte mot eksponering og assosiasjoner.",c:"Kommunikasjon og mediemiks"},
+  {t:"Vareplassering",d:"Strategisk plassering av et merkeprodukt i underholdningsinnhold som film eller TV-serier.",c:"Kommunikasjon og mediemiks"},
+
+  // Markedsmiks og konkurransemidler
+  {t:"Konkurransemidler",d:"Virkemidler for å nå markedsmål: produkt, pris, plass (distribusjon) og påvirkning (markedskommunikasjon).",c:"Markedsmiks"},
+  {t:"Markedsmiks",d:"Sammensetningen av konkurransemidlene vi bruker i markedsføringen.",c:"Markedsmiks"},
+  {t:"Markedsstrategier",d:"Strategier for å nå markedsmålene gjennom fastsettelse av målgrupper og bruk av konkurransemidlene.",c:"Markedsmiks"},
+  {t:"Synergieffekt",d:"Merverdi som oppstår når samarbeid gir bedre resultater enn om delene opererer hver for seg.",c:"Markedsmiks"},
+
+  // Effektmåling
+  {t:"Effektmåling",d:"Måling av markedsføringens effekt gjennom blant annet ROI, kostnad per salg, kostnad per lead og konverteringsgrad.",c:"Effektmåling"},
+  {t:"Avkastning på investering (ROI)",d:"Mål på lønnsomheten av en investering. Inntekt minus kostnad, delt på kostnaden.",c:"Effektmåling"},
+  {t:"Konverteringsgrad",d:"Andelen som utfører en ønsket handling etter eksponering for et markedsføringstiltak.",c:"Effektmåling"},
+  {t:"Kostnad per lead",d:"Hva det koster å skaffe en potensiell kunde gjennom et tiltak.",c:"Effektmåling"},
+  {t:"Kostnad per salg",d:"Hva det koster å gjennomføre ett salg gjennom et tiltak.",c:"Effektmåling"},
+  {t:"Kundens levetidsverdi",d:"Hva en kunde er verdt over tid: gjennomsnittlig salg × antall gjenkjøp × fortjeneste i prosent.",c:"Effektmåling"},
+  {t:"Evaluering",d:"Systematisk vurdering av om et markedsføringstiltak har nådd målene.",c:"Effektmåling"},
+  {t:"Resultat",d:"Det økonomiske utfallet av virksomhetens aktiviteter.",c:"Effektmåling"},
+
+  // Ledelse og organisasjon
+  {t:"Ledelse",d:"Det å oppnå bestemte resultater eller nå mål gjennom andres arbeidsinnsats.",c:"Ledelse og organisasjon"},
+  {t:"Lederfunksjoner",d:"Lederoppgaver: planlegging, organisering, administrasjon, motivasjon, informasjon, kommunikasjon og beslutninger.",c:"Ledelse og organisasjon"},
+  {t:"Organisasjon",d:"En gruppe mennesker som forsøker å nå bestemte mål gjennom samarbeid.",c:"Ledelse og organisasjon"},
+  {t:"Organisasjonskultur",d:"Felles normer, verdier og virkelighetsoppfatninger som utvikles når medlemmene samhandler med hverandre og omgivelsene.",c:"Ledelse og organisasjon"},
+  {t:"Internmarkedsføring",d:"Markedsføring rettet mot personalet, slik at de blir opplært, trent og motivert til å gjøre en best mulig jobb.",c:"Ledelse og organisasjon"},
+  {t:"Strategisk internmarkedsføring",d:"Langsiktig internmarkedsføring som handler om å skape en kultur der ansatte forstår og støtter strategien.",c:"Ledelse og organisasjon"},
+  {t:"Taktisk internmarkedsføring",d:"Kortsiktig internmarkedsføring med konkrete tiltak som opplæring, informasjon og motivasjon.",c:"Ledelse og organisasjon"},
+  {t:"Ekstern markedsføring",d:"Markedsføring som skjer ved bruk av markedsstrategiene målgruppevalg, produkt, pris, distribusjon og kommunikasjon.",c:"Ledelse og organisasjon"},
+  {t:"Interaktiv markedsføring",d:"Markedsføring som skjer ved at ansatte behandler kundene på best mulig måte i direkte kontakt.",c:"Ledelse og organisasjon"},
+  {t:"Teori X og Y",d:"Teori X: mennesker er late og må kontrolleres. Teori Y: mennesker er selvmotiverte og søker ansvar.",c:"Ledelse og organisasjon"},
+  {t:"Motivasjon",d:"Drivkrefter som får mennesker til å handle.",c:"Ledelse og organisasjon"},
+  {t:"Humankapital",d:"Kompetansen, erfaringen og kunnskapen de ansatte besitter.",c:"Ledelse og organisasjon"},
+  {t:"Medarbeiderskap",d:"De ansattes aktive rolle og ansvar for egen arbeidssituasjon og bidrag til virksomhetens mål.",c:"Ledelse og organisasjon"},
+  {t:"Kompetanseutvikling",d:"Systematisk arbeid med å utvikle de ansattes kunnskaper og ferdigheter i tråd med virksomhetens mål.",c:"Ledelse og organisasjon"},
+  {t:"Personalet",d:"De ansatte, en viktig ressurs som mange regner som et eget virkemiddel i markedsføringen.",c:"Ledelse og organisasjon"},
+  {t:"Kjerneverdi",d:"Egenskaper som bedriften ønsker skal kjennetegne den og dens medarbeidere.",c:"Ledelse og organisasjon"},
+  {t:"Rolle",d:"Et sett normer knyttet til en bestemt oppgave eller posisjon.",c:"Ledelse og organisasjon"},
+  {t:"Total quality management (TQM)",d:"Ledelsesfilosofi som vektlegger kontinuerlig forbedring av kvalitet i alle deler av virksomheten.",c:"Ledelse og organisasjon"},
+  {t:"Maslows behovspyramide",d:"Motivasjonsteori med fem nivåer: fysiologiske behov, trygghet, sosiale behov, anerkjennelse og selvrealisering.",c:"Ledelse og organisasjon"},
+
+  // Etikk, samfunnsansvar og bærekraft
+  {t:"Etikk",d:"Læren om fellesskapsverdier i et samfunn og normene og reglene som må følges for å virkeliggjøre disse.",c:"Etikk, samfunnsansvar og bærekraft"},
+  {t:"Samfunnsansvar",d:"Forpliktelse til bærekraftig økonomisk utvikling i samarbeid med ansatte, lokalsamfunn og samfunnet.",c:"Etikk, samfunnsansvar og bærekraft"},
+  {t:"Omdømme",d:"Omgivelsenes oppfatning av en organisasjon over tid.",c:"Etikk, samfunnsansvar og bærekraft"},
+  {t:"Bærekraft",d:"Utvikling som dekker dagens behov uten å ødelegge mulighetene for kommende generasjoner.",c:"Etikk, samfunnsansvar og bærekraft"},
+  {t:"Sirkulær økonomi",d:"Teori om at alle bedrifter bør ta ansvar for å forlenge produktenes livssyklus slik at ressursene forblir i bruk lengst mulig.",c:"Etikk, samfunnsansvar og bærekraft"},
+  {t:"FNs bærekraftsmål",d:"17 globale mål vedtatt av FN i 2015 for bærekraftig utvikling frem mot 2030.",c:"Etikk, samfunnsansvar og bærekraft"},
+  {t:"Åpenhetsloven",d:"Norsk lov som pålegger større virksomheter aktsomhetsvurderinger knyttet til menneskerettigheter og arbeidsforhold.",c:"Etikk, samfunnsansvar og bærekraft"},
+  {t:"Lobbyvirksomhet",d:"Forsøk på å påvirke politiske beslutningstakere til fordel for en bestemt sak eller bransje.",c:"Etikk, samfunnsansvar og bærekraft"},
+
+  // Diverse / digitalt
+  {t:"Big Data",d:"Teknologi og analysemetodikk for datamengder som er for store for tradisjonelle teknikker.",c:"Digitalt og teknologi"},
+  {t:"Algoritme",d:"En fullstendig og nøyaktig beskrivelse av fremgangsmåten for å løse en oppgave.",c:"Digitalt og teknologi"},
+  {t:"Kunstig intelligens",d:"Informasjonsteknologi som gjør at datamaskiner kan løse oppgaver og justere egen aktivitet uten instruksjon fra mennesker.",c:"Digitalt og teknologi"},
+  {t:"E-postkampanjer",d:"Målrettede markedsføringstiltak der virksomheten sender kommersielle budskap via e-post.",c:"Digitalt og teknologi"},
+
+  // Virksomhet og grunnbegreper
+  {t:"Virksomhet",d:"Organisasjoner som produserer varer eller tjenester med tanke på å tjene penger.",c:"Grunnbegreper"},
+  {t:"Markedsføring",d:"Prosess for å skaffe kunder og bygge kunderelasjoner gjennom verdiskaping.",c:"Grunnbegreper"},
+  {t:"Markedsføringsledelse",d:"Understreker at markedsføring og ledelse er to sider av samme sak.",c:"Grunnbegreper"},
+  {t:"Holdningsskapende arbeid",d:"Langsiktige tiltak for å påvirke målgruppens holdninger og oppfatninger.",c:"Grunnbegreper"},
+];
+
+// Build topic list
+const topics = [...new Set(TERMS.map(t => t.c))].sort();
+let currentMode = 'all';
+let selectedTopics = new Set();
+let deck = [];
+let currentIndex = 0;
+
+function setMode(mode) {
+  currentMode = mode;
+  document.querySelectorAll('.mode-btn').forEach(b => b.classList.remove('active'));
+  event.target.classList.add('active');
+
+  const grid = document.getElementById('topicGrid');
+  if (mode === 'topic') {
+    grid.style.display = 'grid';
+    renderTopics();
+    selectedTopics.clear();
+    hideCard();
+  } else {
+    grid.style.display = 'none';
+    selectedTopics.clear();
+    buildDeck();
+  }
+}
+
+function renderTopics() {
+  const grid = document.getElementById('topicGrid');
+  grid.innerHTML = '';
+  topics.forEach(topic => {
+    const count = TERMS.filter(t => t.c === topic).length;
+    const btn = document.createElement('button');
+    btn.className = 'topic-btn';
+    btn.innerHTML = `${topic}<span>${count} begreper</span>`;
+    btn.onclick = () => toggleTopic(topic, btn);
+    grid.appendChild(btn);
+  });
+}
+
+function toggleTopic(topic, btn) {
+  if (selectedTopics.has(topic)) {
+    selectedTopics.delete(topic);
+    btn.classList.remove('active');
+  } else {
+    selectedTopics.add(topic);
+    btn.classList.add('active');
+  }
+  if (selectedTopics.size > 0) {
+    buildDeck();
+  } else {
+    hideCard();
+  }
+}
+
+function hideCard() {
+  document.getElementById('cardArea').style.display = 'none';
+  document.getElementById('controls').style.display = 'none';
+  document.getElementById('progressBarContainer').style.display = 'none';
+  document.getElementById('keyHint').style.display = 'none';
+  document.getElementById('emptyState').style.display = currentMode === 'topic' ? 'block' : 'none';
+}
+
+function buildDeck() {
+  if (currentMode === 'all') {
+    deck = [...TERMS];
+  } else {
+    deck = TERMS.filter(t => selectedTopics.has(t.c));
+  }
+  shuffleArray(deck);
+  currentIndex = 0;
+  document.getElementById('emptyState').style.display = 'none';
+  document.getElementById('cardArea').style.display = 'block';
+  document.getElementById('controls').style.display = 'flex';
+  document.getElementById('progressBarContainer').style.display = 'block';
+  document.getElementById('keyHint').style.display = 'block';
+  showCard();
+}
+
+function shuffleArray(arr) {
+  for (let i = arr.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [arr[i], arr[j]] = [arr[j], arr[i]];
+  }
+}
+
+function showCard() {
+  const card = document.getElementById('card');
+  card.classList.remove('flipped');
+  const term = deck[currentIndex];
+  document.getElementById('cardTopic').textContent = term.c;
+  document.getElementById('cardTerm').textContent = term.t;
+  document.getElementById('cardTermBack').textContent = term.t;
+  document.getElementById('cardDef').textContent = term.d;
+  document.getElementById('progress').textContent = `${currentIndex + 1} / ${deck.length}`;
+  document.getElementById('progressFill').style.width = `${((currentIndex + 1) / deck.length) * 100}%`;
+}
+
+function flipCard() {
+  document.getElementById('card').classList.toggle('flipped');
+}
+
+function nextCard() {
+  if (currentIndex < deck.length - 1) {
+    currentIndex++;
+    showCard();
+  }
+}
+
+function prevCard() {
+  if (currentIndex > 0) {
+    currentIndex--;
+    showCard();
+  }
+}
+
+function shuffleDeck() {
+  shuffleArray(deck);
+  currentIndex = 0;
+  showCard();
+}
+
+// Keyboard
+document.addEventListener('keydown', e => {
+  if (e.key === 'ArrowRight') nextCard();
+  else if (e.key === 'ArrowLeft') prevCard();
+  else if (e.key === ' ') { e.preventDefault(); flipCard(); }
+});
+
+// Touch swipe
+let touchStartX = 0;
+document.getElementById('cardArea').addEventListener('touchstart', e => {
+  touchStartX = e.changedTouches[0].screenX;
+}, {passive: true});
+document.getElementById('cardArea').addEventListener('touchend', e => {
+  const diff = e.changedTouches[0].screenX - touchStartX;
+  if (Math.abs(diff) > 60) {
+    if (diff < 0) nextCard();
+    else prevCard();
+  }
+}, {passive: true});
+
+// Start with all
+buildDeck();
+</script>
+</body>
+</html>
