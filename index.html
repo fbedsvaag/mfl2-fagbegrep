@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Fagbegrep – MFL2</title>
-<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
   * { margin: 0; padding: 0; box-sizing: border-box; }
 
@@ -21,314 +21,175 @@
     --accent-light: #D5EDBA;
     --shadow: 0 8px 32px rgba(20,46,30,0.10);
     --radius: 14px;
+    --correct: #22865a;
+    --wrong: #c0392b;
+    --quiz-bg: #f0f7f2;
+    --amber: #b8860b;
   }
 
-  body {
-    font-family: 'DM Sans', sans-serif;
-    background: var(--bg);
-    color: var(--text);
-    min-height: 100vh;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-  }
+  body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; display: flex; flex-direction: column; align-items: center; }
+  header { text-align: center; padding: 2.5rem 1rem 1rem; max-width: 600px; }
+  header h1 { font-family: 'DM Serif Display', serif; font-size: 2rem; font-weight: 400; letter-spacing: -0.02em; margin-bottom: 0.3rem; }
+  header p { color: var(--muted); font-size: 0.9rem; }
 
-  header {
-    text-align: center;
-    padding: 2.5rem 1rem 1rem;
-    max-width: 600px;
-  }
-
-  header h1 {
-    font-family: 'DM Serif Display', serif;
-    font-size: 2rem;
-    font-weight: 400;
-    letter-spacing: -0.02em;
-    margin-bottom: 0.3rem;
-  }
-
-  header p {
-    color: var(--muted);
-    font-size: 0.9rem;
-  }
-
-  /* MODE SELECTOR */
-  .mode-selector {
-    display: flex;
-    gap: 0.5rem;
-    justify-content: center;
-    margin: 1.5rem 0;
-    flex-wrap: wrap;
-    padding: 0 1rem;
-  }
-
-  .mode-btn {
-    padding: 0.55rem 1.1rem;
-    border: 1.5px solid var(--border);
-    border-radius: 99px;
-    background: var(--card);
-    font-family: 'DM Sans', sans-serif;
-    font-size: 0.82rem;
-    font-weight: 500;
-    color: var(--text);
-    cursor: pointer;
-    transition: all 0.2s;
-  }
-
+  .mode-selector { display: flex; gap: 0.5rem; justify-content: center; margin: 1.5rem 0; flex-wrap: wrap; padding: 0 1rem; }
+  .mode-btn { padding: 0.55rem 1.1rem; border: 1.5px solid var(--border); border-radius: 99px; background: var(--card); font-family: 'DM Sans', sans-serif; font-size: 0.82rem; font-weight: 500; color: var(--text); cursor: pointer; transition: all 0.2s; }
   .mode-btn:hover { border-color: var(--accent); color: var(--accent); }
-  .mode-btn.active {
-    background: var(--accent);
-    border-color: var(--accent);
-    color: #fff;
-  }
+  .mode-btn.active { background: var(--accent); border-color: var(--accent); color: #fff; }
 
-  /* TOPIC GRID */
-  .topic-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-    gap: 0.5rem;
-    max-width: 640px;
-    width: 100%;
-    padding: 0 1rem;
-    margin-bottom: 1.5rem;
-  }
-
-  .topic-btn {
-    padding: 0.6rem 0.8rem;
-    border: 1.5px solid var(--border);
-    border-radius: 10px;
-    background: var(--card);
-    font-family: 'DM Sans', sans-serif;
-    font-size: 0.8rem;
-    font-weight: 500;
-    color: var(--text);
-    cursor: pointer;
-    transition: all 0.2s;
-    text-align: left;
-  }
-
+  .topic-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 0.5rem; max-width: 640px; width: 100%; padding: 0 1rem; margin-bottom: 1.5rem; }
+  .topic-btn { padding: 0.6rem 0.8rem; border: 1.5px solid var(--border); border-radius: 10px; background: var(--card); font-family: 'DM Sans', sans-serif; font-size: 0.8rem; font-weight: 500; color: var(--text); cursor: pointer; transition: all 0.2s; text-align: left; }
   .topic-btn:hover { border-color: var(--accent); }
   .topic-btn.active { background: var(--accent); border-color: var(--accent); color: #fff; }
-
-  .topic-btn span {
-    font-size: 0.72rem;
-    color: var(--muted);
-    display: block;
-    margin-top: 2px;
-  }
-
+  .topic-btn span { font-size: 0.72rem; color: var(--muted); display: block; margin-top: 2px; }
   .topic-btn.active span { color: rgba(255,255,255,0.7); }
 
-  /* CARD AREA */
-  .card-area {
-    width: 100%;
-    max-width: 540px;
-    padding: 0 1rem;
-    perspective: 1000px;
-    margin-bottom: 1rem;
-  }
+  .search-container { max-width: 540px; width: 100%; padding: 0 1rem; margin-bottom: 1rem; }
+  .search-input { width: 100%; padding: 0.7rem 1rem 0.7rem 2.6rem; border: 1.5px solid var(--border); border-radius: 10px; font-family: 'DM Sans', sans-serif; font-size: 0.88rem; background: var(--card); color: var(--text); outline: none; transition: border-color 0.2s; }
+  .search-input:focus { border-color: var(--accent); }
+  .search-wrapper { position: relative; }
+  .search-icon { position: absolute; left: 0.85rem; top: 50%; transform: translateY(-50%); color: var(--muted); font-size: 0.95rem; pointer-events: none; }
 
-  .card-container {
-    width: 100%;
-    min-height: 260px;
-    cursor: pointer;
-    position: relative;
-    transition: transform 0.5s, height 0.3s;
-    transform-style: preserve-3d;
-  }
+  .term-list { max-width: 640px; width: 100%; padding: 0 1rem; margin-bottom: 2rem; }
+  .term-list-header { font-size: 0.75rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.08em; color: var(--accent); margin: 1.2rem 0 0.5rem; padding-left: 0.2rem; }
+  .term-item { background: var(--card); border: 1.5px solid var(--border); border-radius: 10px; padding: 0.8rem 1rem; margin-bottom: 0.4rem; cursor: pointer; transition: all 0.2s; }
+  .term-item:hover { border-color: var(--accent); }
+  .term-item .term-name { font-weight: 600; font-size: 0.9rem; margin-bottom: 0.15rem; display: flex; align-items: center; gap: 0.4rem; }
+  .term-item .term-cat { font-size: 0.72rem; color: var(--muted); }
+  .term-item .term-def { font-size: 0.85rem; color: var(--muted); line-height: 1.55; margin-top: 0.5rem; display: none; }
+  .term-item.expanded .term-def { display: block; }
+  .term-count { text-align: center; font-size: 0.8rem; color: var(--muted); margin-bottom: 1rem; }
 
+  .mastery-dot { width: 8px; height: 8px; border-radius: 50%; display: inline-block; flex-shrink: 0; }
+  .mastery-dot.m-green { background: var(--correct); }
+  .mastery-dot.m-amber { background: var(--amber); }
+  .mastery-dot.m-red { background: var(--wrong); }
+  .mastery-dot.m-grey { background: var(--border); }
+
+  .card-area { width: 100%; max-width: 540px; padding: 0 1rem; perspective: 1000px; margin-bottom: 1rem; }
+  .card-container { width: 100%; min-height: 260px; cursor: pointer; position: relative; transition: transform 0.5s, height 0.3s; transform-style: preserve-3d; }
   .card-container.flipped { transform: rotateY(180deg); }
+  .card-face { position: absolute; inset: 0; backface-visibility: hidden; border-radius: var(--radius); display: flex; flex-direction: column; justify-content: center; align-items: center; padding: 2rem 2.2rem; box-shadow: var(--shadow); }
+  .card-front { background: var(--card); }
+  .card-front .card-topic { font-size: 0.72rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.08em; color: var(--accent); margin-bottom: 0.8rem; }
+  .card-front .card-term { font-family: 'DM Serif Display', serif; font-size: 1.65rem; text-align: center; line-height: 1.3; }
+  .card-front .card-hint { margin-top: 1.2rem; font-size: 0.78rem; color: var(--muted); }
+  .card-back { background: var(--card-back); color: var(--text-light); transform: rotateY(180deg); }
+  .card-back .card-term-small { font-family: 'DM Serif Display', serif; font-size: 1rem; margin-bottom: 0.8rem; color: var(--accent-light); }
+  .card-back .card-definition { font-size: 0.92rem; line-height: 1.65; text-align: center; max-width: 420px; }
 
-  .card-face {
-    position: absolute;
-    inset: 0;
-    backface-visibility: hidden;
-    border-radius: var(--radius);
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    padding: 2rem 2.2rem;
-    box-shadow: var(--shadow);
-  }
+  .self-assess { display: flex; gap: 0.6rem; justify-content: center; margin-top: 1.2rem; }
+  .assess-btn { padding: 0.45rem 1rem; border: 1.5px solid rgba(255,255,255,0.3); border-radius: 99px; background: transparent; font-family: 'DM Sans', sans-serif; font-size: 0.78rem; font-weight: 600; cursor: pointer; transition: all 0.2s; color: var(--text-light); }
+  .assess-btn:hover { background: rgba(255,255,255,0.15); }
+  .assess-btn.know { border-color: var(--accent-light); color: var(--accent-light); }
+  .assess-btn.dunno { border-color: #f5a6a0; color: #f5a6a0; }
 
-  .card-front {
-    background: var(--card);
-  }
-
-  .card-front .card-topic {
-    font-size: 0.72rem;
-    font-weight: 600;
-    text-transform: uppercase;
-    letter-spacing: 0.08em;
-    color: var(--accent);
-    margin-bottom: 0.8rem;
-  }
-
-  .card-front .card-term {
-    font-family: 'DM Serif Display', serif;
-    font-size: 1.65rem;
-    text-align: center;
-    line-height: 1.3;
-  }
-
-  .card-front .card-hint {
-    margin-top: 1.2rem;
-    font-size: 0.78rem;
-    color: var(--muted);
-  }
-
-  .card-back {
-    background: var(--card-back);
-    color: var(--text-light);
-    transform: rotateY(180deg);
-  }
-
-  .card-back .card-term-small {
-    font-family: 'DM Serif Display', serif;
-    font-size: 1rem;
-    margin-bottom: 0.8rem;
-    color: var(--accent-light);
-  }
-
-  .card-back .card-definition {
-    font-size: 0.92rem;
-    line-height: 1.65;
-    text-align: center;
-    max-width: 420px;
-  }
-
-  /* CONTROLS */
-  .controls {
-    display: flex;
-    gap: 0.8rem;
-    justify-content: center;
-    align-items: center;
-    margin-bottom: 1rem;
-    flex-wrap: wrap;
-  }
-
-  .nav-btn {
-    width: 48px;
-    height: 48px;
-    border-radius: 50%;
-    border: 1.5px solid var(--border);
-    background: var(--card);
-    font-size: 1.2rem;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    transition: all 0.2s;
-    color: var(--text);
-  }
-
+  .controls { display: flex; gap: 0.8rem; justify-content: center; align-items: center; margin-bottom: 1rem; flex-wrap: wrap; }
+  .nav-btn { width: 48px; height: 48px; border-radius: 50%; border: 1.5px solid var(--border); background: var(--card); font-size: 1.2rem; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: all 0.2s; color: var(--text); }
   .nav-btn:hover { border-color: var(--accent); color: var(--accent); }
+  .progress { font-size: 0.85rem; font-weight: 500; color: var(--muted); min-width: 80px; text-align: center; }
+  .shuffle-btn, .filter-btn { padding: 0.5rem 1rem; border: 1.5px solid var(--border); border-radius: 99px; background: var(--card); font-family: 'DM Sans', sans-serif; font-size: 0.8rem; font-weight: 500; cursor: pointer; color: var(--text); transition: all 0.2s; }
+  .shuffle-btn:hover, .filter-btn:hover { border-color: var(--accent); color: var(--accent); }
+  .filter-btn.active { background: var(--accent); color: #fff; border-color: var(--accent); }
 
-  .progress {
-    font-size: 0.85rem;
-    font-weight: 500;
-    color: var(--muted);
-    min-width: 80px;
-    text-align: center;
-  }
+  .progress-bar-container { max-width: 540px; width: 100%; padding: 0 1rem; margin-bottom: 2rem; }
+  .progress-bar { height: 4px; background: var(--border); border-radius: 2px; overflow: hidden; }
+  .progress-bar-fill { height: 100%; background: var(--accent); border-radius: 2px; transition: width 0.3s; }
 
-  .shuffle-btn {
-    padding: 0.5rem 1rem;
-    border: 1.5px solid var(--border);
-    border-radius: 99px;
-    background: var(--card);
-    font-family: 'DM Sans', sans-serif;
-    font-size: 0.8rem;
-    font-weight: 500;
-    cursor: pointer;
-    color: var(--text);
-    transition: all 0.2s;
-  }
-
-  .shuffle-btn:hover { border-color: var(--accent); color: var(--accent); }
-
-  /* PROGRESS BAR */
-  .progress-bar-container {
-    max-width: 540px;
-    width: 100%;
-    padding: 0 1rem;
-    margin-bottom: 2rem;
-  }
-
-  .progress-bar {
-    height: 4px;
-    background: var(--border);
-    border-radius: 2px;
-    overflow: hidden;
-  }
-
-  .progress-bar-fill {
-    height: 100%;
-    background: var(--accent);
-    border-radius: 2px;
-    transition: width 0.3s;
-  }
-
-  /* KEYBOARD HINT */
-  .keyboard-hint {
-    text-align: center;
-    font-size: 0.75rem;
-    color: var(--muted);
-    padding-bottom: 2rem;
-  }
-
-  .keyboard-hint kbd {
-    display: inline-block;
-    padding: 2px 7px;
-    border: 1px solid var(--border);
-    border-radius: 4px;
-    font-family: 'DM Sans', sans-serif;
-    font-size: 0.72rem;
-    background: var(--card);
-    margin: 0 1px;
-  }
-
-  /* EMPTY STATE */
-  .empty-state {
-    text-align: center;
-    padding: 3rem 1rem;
-    color: var(--muted);
-  }
-
+  .keyboard-hint { text-align: center; font-size: 0.75rem; color: var(--muted); padding-bottom: 2rem; }
+  .keyboard-hint kbd { display: inline-block; padding: 2px 7px; border: 1px solid var(--border); border-radius: 4px; font-family: 'DM Sans', sans-serif; font-size: 0.72rem; background: var(--card); margin: 0 1px; }
+  .empty-state { text-align: center; padding: 3rem 1rem; color: var(--muted); }
   .empty-state p { font-size: 0.95rem; }
 
-  footer {
-    text-align: center;
-    padding: 2rem 1rem 2.5rem;
-    font-size: 0.75rem;
-    color: var(--muted);
-    margin-top: auto;
-    line-height: 1.6;
-  }
+  .quiz-area { max-width: 540px; width: 100%; padding: 0 1rem; margin-bottom: 2rem; }
+  .quiz-card { background: var(--card); border-radius: var(--radius); padding: 2rem; box-shadow: var(--shadow); margin-bottom: 1rem; }
+  .quiz-card .quiz-topic { font-size: 0.72rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.08em; color: var(--accent); margin-bottom: 0.5rem; }
+  .quiz-card .quiz-definition { font-size: 0.95rem; line-height: 1.65; color: var(--text); margin-bottom: 1.5rem; }
+  .quiz-options { display: flex; flex-direction: column; gap: 0.5rem; }
+  .quiz-option { padding: 0.75rem 1rem; border: 1.5px solid var(--border); border-radius: 10px; background: var(--card); font-family: 'DM Sans', sans-serif; font-size: 0.88rem; font-weight: 500; color: var(--text); cursor: pointer; transition: all 0.2s; text-align: left; }
+  .quiz-option:hover:not(.disabled) { border-color: var(--accent); background: var(--quiz-bg); }
+  .quiz-option.correct { border-color: var(--correct); background: #e8f5e9; color: var(--correct); }
+  .quiz-option.wrong { border-color: var(--wrong); background: #fce4e4; color: var(--wrong); }
+  .quiz-option.disabled { cursor: default; opacity: 0.6; }
+  .quiz-option.disabled.correct { opacity: 1; }
+  .quiz-progress { text-align: center; font-size: 0.85rem; color: var(--muted); margin-bottom: 1rem; }
+  .quiz-score-bar { display: flex; gap: 4px; justify-content: center; margin-bottom: 1.5rem; flex-wrap: wrap; }
+  .quiz-dot { width: 14px; height: 14px; border-radius: 50%; background: var(--border); transition: background 0.3s; }
+  .quiz-dot.correct { background: var(--correct); }
+  .quiz-dot.wrong { background: var(--wrong); }
+  .quiz-next-btn { display: block; margin: 1rem auto 0; padding: 0.6rem 1.8rem; border: none; border-radius: 99px; background: var(--accent); color: #fff; font-family: 'DM Sans', sans-serif; font-size: 0.88rem; font-weight: 600; cursor: pointer; transition: background 0.2s; }
+  .quiz-next-btn:hover { background: var(--accent-hover); }
+  .quiz-result { background: var(--card); border-radius: var(--radius); padding: 2.5rem 2rem; box-shadow: var(--shadow); text-align: center; }
+  .quiz-result h2 { font-family: 'DM Serif Display', serif; font-size: 1.5rem; font-weight: 400; margin-bottom: 0.5rem; }
+  .quiz-result .score-big { font-size: 3rem; font-weight: 700; color: var(--accent); margin: 0.5rem 0; }
+  .quiz-result p { color: var(--muted); font-size: 0.9rem; margin-bottom: 1rem; }
+  .quiz-wrong-list { text-align: left; margin: 1.5rem 0; padding: 1rem; background: var(--quiz-bg); border-radius: 10px; }
+  .quiz-wrong-list h3 { font-size: 0.8rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.06em; color: var(--muted); margin-bottom: 0.6rem; }
+  .quiz-wrong-item { font-size: 0.85rem; line-height: 1.5; margin-bottom: 0.5rem; padding-left: 0.5rem; border-left: 2px solid var(--wrong); }
+  .quiz-wrong-item strong { color: var(--text); }
+
+  .dashboard { max-width: 640px; width: 100%; padding: 0 1rem; margin-bottom: 2rem; }
+  .dash-card { background: var(--card); border-radius: var(--radius); padding: 1.5rem; box-shadow: var(--shadow); margin-bottom: 1rem; }
+  .dash-card h2 { font-family: 'DM Serif Display', serif; font-size: 1.2rem; font-weight: 400; margin-bottom: 1rem; }
+  .dash-stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 0.8rem; margin-bottom: 0.5rem; }
+  .dash-stat { text-align: center; padding: 0.8rem 0.5rem; background: var(--quiz-bg); border-radius: 10px; }
+  .dash-stat .stat-num { font-size: 1.6rem; font-weight: 700; line-height: 1.2; }
+  .dash-stat .stat-num.green { color: var(--correct); }
+  .dash-stat .stat-num.amber { color: var(--amber); }
+  .dash-stat .stat-num.red { color: var(--wrong); }
+  .dash-stat .stat-label { font-size: 0.72rem; color: var(--muted); margin-top: 0.2rem; }
+  .dash-bar-row { display: flex; align-items: center; gap: 0.6rem; margin-bottom: 0.6rem; }
+  .dash-bar-label { font-size: 0.78rem; font-weight: 500; width: 140px; flex-shrink: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .dash-bar-track { flex: 1; height: 8px; background: var(--border); border-radius: 4px; overflow: hidden; display: flex; }
+  .dash-bar-green { height: 100%; background: var(--correct); transition: width 0.3s; }
+  .dash-bar-amber { height: 100%; background: var(--amber); transition: width 0.3s; }
+  .dash-bar-pct { font-size: 0.72rem; font-weight: 600; color: var(--muted); width: 32px; text-align: right; flex-shrink: 0; }
+  .dash-history { max-height: 200px; overflow-y: auto; }
+  .dash-history-item { display: flex; justify-content: space-between; align-items: center; padding: 0.5rem 0; border-bottom: 1px solid var(--border); font-size: 0.82rem; }
+  .dash-history-item:last-child { border-bottom: none; }
+  .dash-history-item .hist-date { color: var(--muted); }
+  .dash-history-item .hist-score { font-weight: 600; }
+  .dash-empty { text-align: center; color: var(--muted); font-size: 0.88rem; padding: 1.5rem 0; }
+  .reset-btn { display: block; margin: 0 auto; padding: 0.45rem 1.2rem; border: 1.5px solid var(--wrong); border-radius: 99px; background: transparent; font-family: 'DM Sans', sans-serif; font-size: 0.78rem; font-weight: 500; cursor: pointer; color: var(--wrong); transition: all 0.2s; }
+  .reset-btn:hover { background: var(--wrong); color: #fff; }
+
+  footer { text-align: center; padding: 2rem 1rem 2.5rem; font-size: 0.75rem; color: var(--muted); margin-top: auto; line-height: 1.6; }
+  footer a { color: var(--accent); }
 
   @media (max-width: 500px) {
     header h1 { font-size: 1.6rem; }
     .card-front .card-term { font-size: 1.35rem; }
     .card-face { padding: 1.5rem 1.4rem; }
     .topic-grid { grid-template-columns: repeat(2, 1fr); }
+    .mode-btn { font-size: 0.76rem; padding: 0.5rem 0.85rem; }
+    .dash-bar-label { width: 100px; font-size: 0.72rem; }
   }
 </style>
 </head>
 <body>
 
 <header>
-  <img src="data:image/webp;base64,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ZWF0ZWQ+CiAgICAgPEF0dHJpYjpEYXRhPnsmcXVvdDtkb2MmcXVvdDs6JnF1b3Q7REFIQzRIbXJZVkUmcXVvdDssJnF1b3Q7dXNlciZxdW90OzomcXVvdDtVQUY2T1Q5NXh3byZxdW90OywmcXVvdDticmFuZCZxdW90OzomcXVvdDtNZXRpcyBVdGRhbm5pbmcmcXVvdDt9PC9BdHRyaWI6RGF0YT4KICAgICA8QXR0cmliOkV4dElkPjJmZTFkMDQxLTZlYWEtNDc1OS04MGY2LTY2YzAxMjllMTdhNTwvQXR0cmliOkV4dElkPgogICAgIDxBdHRyaWI6RmJJZD41MjUyNjU5MTQxNzk1ODA8L0F0dHJpYjpGYklkPgogICAgIDxBdHRyaWI6VG91Y2hUeXBlPjI8L0F0dHJpYjpUb3VjaFR5cGU+CiAgICA8L3JkZjpsaT4KICAgPC9yZGY6U2VxPgogIDwvQXR0cmliOkFkcz4KIDwvcmRmOkRlc2NyaXB0aW9uPgoKIDxyZGY6RGVzY3JpcHRpb24gcmRmOmFib3V0PScnCiAgeG1sbnM6ZGM9J2h0dHA6Ly9wdXJsLm9yZy9kYy9lbGVtZW50cy8xLjEvJz4KICA8ZGM6dGl0bGU+CiAgIDxyZGY6QWx0PgogICAgPHJkZjpsaSB4bWw6bGFuZz0neC1kZWZhdWx0Jz5EZXNpZ24gdXRlbiBuYXZuIC0gMTwvcmRmOmxpPgogICA8L3JkZjpBbHQ+CiAgPC9kYzp0aXRsZT4KIDwvcmRmOkRlc2NyaXB0aW9uPgoKIDxyZGY6RGVzY3JpcHRpb24gcmRmOmFib3V0PScnCiAgeG1sbnM6cGRmPSdodHRwOi8vbnMuYWRvYmUuY29tL3BkZi8xLjMvJz4KICA8cGRmOkF1dGhvcj5DaHJpc3RpYW4gRnVydTwvcGRmOkF1dGhvcj4KIDwvcmRmOkRlc2NyaXB0aW9uPgoKIDxyZGY6RGVzY3JpcHRpb24gcmRmOmFib3V0PScnCiAgeG1sbnM6eG1wPSdodHRwOi8vbnMuYWRvYmUuY29tL3hhcC8xLjAvJz4KICA8eG1wOkNyZWF0b3JUb29sPkNhbnZhIGRvYz1EQUhDNEhtcllWRSB1c2VyPVVBRjZPVDk1eHdvIGJyYW5kPU1ldGlzIFV0ZGFubmluZzwveG1wOkNyZWF0b3JUb29sPgogPC9yZGY6RGVzY3JpcHRpb24+CjwvcmRmOlJERj4KPC94OnhtcG1ldGE+Cjw/eHBhY2tldCBlbmQ9J3InPz4=" alt="Bergen Private Gymnas" style="display:block;max-width:200px;margin:0 auto 0.5rem;">
   <h1>Fagbegrep MFL2</h1>
   <p>Trykk på kortet for å se forklaringen</p>
 </header>
 
 <div class="mode-selector">
-  <button class="mode-btn active" onclick="setMode('all')">Alle begreper</button>
-  <button class="mode-btn" onclick="setMode('topic')">Velg tema</button>
+  <button class="mode-btn active" onclick="setMode('all', this)">Alle begreper</button>
+  <button class="mode-btn" onclick="setMode('topic', this)">Velg tema</button>
+  <button class="mode-btn" onclick="setMode('list', this)">Begrepsliste</button>
+  <button class="mode-btn" onclick="setMode('quiz', this)">Test deg selv</button>
+  <button class="mode-btn" onclick="setMode('progress', this)">Min fremgang</button>
 </div>
 
 <div class="topic-grid" id="topicGrid" style="display:none"></div>
+<div class="search-container" id="searchContainer" style="display:none"><div class="search-wrapper"><span class="search-icon">&#128269;</span><input type="text" class="search-input" id="searchInput" placeholder="Søk etter begrep ..." oninput="filterList()"></div></div>
+<div class="term-list" id="termList" style="display:none"></div>
+
+<div class="controls" id="flashcardFilter" style="display:none">
+  <button class="filter-btn active" onclick="setFlashFilter('all', this)">Alle</button>
+  <button class="filter-btn" onclick="setFlashFilter('unseen', this)">Usette</button>
+  <button class="filter-btn" onclick="setFlashFilter('practicing', this)">Øver på</button>
+</div>
 
 <div class="card-area" id="cardArea" style="display:none">
   <div class="card-container" id="card" onclick="flipCard()">
@@ -340,430 +201,309 @@
     <div class="card-face card-back">
       <div class="card-term-small" id="cardTermBack"></div>
       <div class="card-definition" id="cardDef"></div>
+      <div class="self-assess" id="selfAssess">
+        <button class="assess-btn know" onclick="assessTerm(event,'know')">Kan dette &#10003;</button>
+        <button class="assess-btn dunno" onclick="assessTerm(event,'practice')">Øver fortsatt</button>
+      </div>
     </div>
   </div>
 </div>
 
 <div class="controls" id="controls" style="display:none">
-  <button class="nav-btn" onclick="prevCard()">←</button>
+  <button class="nav-btn" onclick="prevCard()">&#8592;</button>
   <div class="progress" id="progress"></div>
-  <button class="nav-btn" onclick="nextCard()">→</button>
+  <button class="nav-btn" onclick="nextCard()">&#8594;</button>
   <button class="shuffle-btn" onclick="shuffleDeck()">Stokk om</button>
 </div>
 
-<div class="progress-bar-container" id="progressBarContainer" style="display:none">
-  <div class="progress-bar"><div class="progress-bar-fill" id="progressFill"></div></div>
-</div>
-
-<div class="empty-state" id="emptyState" style="display:none">
-  <p>Velg ett eller flere temaer for å starte.</p>
-</div>
-
-<div class="keyboard-hint" id="keyHint" style="display:none">
-  <kbd>←</kbd> <kbd>→</kbd> bla &nbsp; <kbd>mellomrom</kbd> snu
-</div>
+<div class="progress-bar-container" id="progressBarContainer" style="display:none"><div class="progress-bar"><div class="progress-bar-fill" id="progressFill"></div></div></div>
+<div class="empty-state" id="emptyState" style="display:none"><p>Velg ett eller flere temaer for å starte.</p></div>
+<div class="quiz-area" id="quizArea" style="display:none"></div>
+<div class="dashboard" id="dashboard" style="display:none"></div>
+<div class="keyboard-hint" id="keyHint" style="display:none"><kbd>&#8592;</kbd> <kbd>&#8594;</kbd> bla &nbsp; <kbd>mellomrom</kbd> snu</div>
 
 <script>
-const TERMS = [
-  // Situasjonsanalyse og bransjeanalyse
-  {t:"Arbeidsbetingelser",d:"Forhold som påvirker virksomhetens beslutninger og markedsføring. Deles inn i interne (innad i virksomheten) og eksterne (utenfor virksomheten).",c:"Situasjonsanalyse og bransjeanalyse"},
-  {t:"Interne arbeidsbetingelser",d:"Forhold i virksomheten som påvirker markedsstrategier og beslutninger, for eksempel økonomi, ansattes kompetanse og produktene som tilbys.",c:"Situasjonsanalyse og bransjeanalyse"},
-  {t:"Eksterne arbeidsbetingelser",d:"Ytre faktorer som påvirker virksomhetens markedsstrategier og beslutninger, for eksempel konkurrentenes markedsføring og markedssituasjonen.",c:"Situasjonsanalyse og bransjeanalyse"},
-  {t:"Situasjonsanalyse",d:"Analyse av virksomhetens interne og eksterne arbeidsbetingelser.",c:"Situasjonsanalyse og bransjeanalyse"},
-  {t:"SWOT-analyse",d:"Analyseskjema for å analysere interne arbeidsbetingelser (sterke og svake sider) og eksterne arbeidsbetingelser (muligheter og trusler).",c:"Situasjonsanalyse og bransjeanalyse"},
-  {t:"Bransje",d:"Samlebetegnelse på virksomheter som utfører samme type oppgaver.",c:"Situasjonsanalyse og bransjeanalyse"},
-  {t:"Bransjeanalyse",d:"Kartlegging av konkurransen i en bransje ved hjelp av Porters konkurransekrefter.",c:"Situasjonsanalyse og bransjeanalyse"},
-  {t:"Porters konkurransekrefter",d:"Modell som identifiserer fem krefter som bestemmer konkurranseintensiteten: nye aktører, substitutter, kundenes forhandlingsmakt, leverandørenes forhandlingsmakt og rivalisering mellom eksisterende aktører.",c:"Situasjonsanalyse og bransjeanalyse"},
-  {t:"Konkurrentanalyse",d:"Analyse av konkurrentene som ledd i situasjonsanalysen.",c:"Situasjonsanalyse og bransjeanalyse"},
-  {t:"Konkurrenter",d:"De som kjemper om de samme kundene på et marked.",c:"Situasjonsanalyse og bransjeanalyse"},
-  {t:"Konkurranseintensitet",d:"Graden av rivalisering mellom eksisterende aktører i en bransje.",c:"Situasjonsanalyse og bransjeanalyse"},
-  {t:"Substitutt",d:"Produkt som ikke er identisk med produktene i bransjen, men som likevel kan erstatte dem.",c:"Situasjonsanalyse og bransjeanalyse"},
-  {t:"Nyetablering",d:"Trusselen fra nye aktører som etablerer seg i en bransje.",c:"Situasjonsanalyse og bransjeanalyse"},
-  {t:"Trend",d:"En langsiktig utviklingsretning i markedet eller samfunnet som påvirker forbrukernes atferd og virksomhetenes strategier.",c:"Situasjonsanalyse og bransjeanalyse"},
-  {t:"Globalisering",d:"Økende grad av samhandling, integrasjon og gjensidig avhengighet mellom folk og stater.",c:"Situasjonsanalyse og bransjeanalyse"},
-  {t:"Digitalisering",d:"Tilrettelegging for å utvikle, håndtere og utnytte digital informasjon ved hjelp av informasjonsteknologi.",c:"Situasjonsanalyse og bransjeanalyse"},
-  {t:"Deregulering",d:"Når myndighetene fjerner eller reduserer offentlige reguleringer i et marked.",c:"Situasjonsanalyse og bransjeanalyse"},
-  {t:"Regulering",d:"Offentlige regler og lover som styrer hvordan virksomheter kan operere i et marked.",c:"Situasjonsanalyse og bransjeanalyse"},
+const TERMS=[
+// ── Grunnbegreper ──
+{t:"Behov",d:"Å trenge noe som kan oppheve en fysiologisk, psykologisk eller praktisk mangeltilstand.",c:"Grunnbegreper"},
+{t:"Bransje",d:"Samlebetegnelse på virksomheter som utfører samme type oppgaver.",c:"Grunnbegreper"},
+{t:"Marked",d:"Samling av kjøpere og selgere som forhandler om et spesielt produkt eller grupper av produkter.",c:"Grunnbegreper"},
+{t:"Markedsføring",d:"En prosess som går ut på å skaffe kunder og bygge sterke kunderelasjoner gjennom å skape verdier for kundene, som i sin tur bidrar til verdiskaping for virksomheten.",c:"Grunnbegreper"},
+{t:"Markedsføringsledelse",d:"Begrep som brukes innenfor markedsføringsteorien, og som understreker at markedsføring og ledelse er to sider av samme sak.",c:"Grunnbegreper"},
+{t:"Personalet",d:"Samlebetegnelse på de ansatte. De er en viktig ressurs og regnes derfor av mange som et eget virkemiddel i markedsføringen.",c:"Grunnbegreper"},
+{t:"Rolle",d:"Et sett normer som knytter seg til en bestemt oppgave eller posisjon.",c:"Grunnbegreper"},
+{t:"Virksomhet",d:"Organisasjoner som produserer varer eller tjenester med tanke på å tjene penger. De kan være både private og offentlige, eller en blanding.",c:"Grunnbegreper"},
 
-  // Mål, strategier og forretningsidé
-  {t:"Visjon",d:"Et fremtidsbilde og noe vi ønsker skal skje.",c:"Mål, strategier og forretningsidé"},
-  {t:"Misjon",d:"Et uttrykk for hvorfor virksomheten eksisterer, og hva den kan tilby kundene.",c:"Mål, strategier og forretningsidé"},
-  {t:"Forretningsidé",d:"De forretningsmuligheter som vi finner fram til ut fra markedsbehov, kunder, produkter og konkurransefortrinn.",c:"Mål, strategier og forretningsidé"},
-  {t:"Mål",d:"En ønsket tilstand på et fremtidig tidspunkt.",c:"Mål, strategier og forretningsidé"},
-  {t:"Overordnede mål",d:"Selve grunnlaget for en organisasjons virksomhet. Et viktig overordnet mål for en bedrift er størst mulig overskudd.",c:"Mål, strategier og forretningsidé"},
-  {t:"Strategi",d:"Tiltak for å nå mål.",c:"Mål, strategier og forretningsidé"},
-  {t:"Overordnede strategier",d:"Strategier for å nå de overordnede målene.",c:"Mål, strategier og forretningsidé"},
-  {t:"Markedsmål",d:"Mål for virksomhetens markedsføring i markedsplanleggingsperioden, vanligvis ett år.",c:"Mål, strategier og forretningsidé"},
-  {t:"Prestasjonsmål (KPI)",d:"Barometer som varsler virksomheten om at den går i riktig eller feil retning. Kalles gjerne Key Performance Indicators.",c:"Mål, strategier og forretningsidé"},
-  {t:"Markedsplan",d:"Plan for markedsføringen det kommende året, som inneholder situasjonsanalyse, markedsmål, markedsstrategier og kampanjeplaner.",c:"Mål, strategier og forretningsidé"},
-  {t:"Markedsplanlegging",d:"En bevisst og systematisk innsamling og analyse av markedsdata, fastsetting av markedsmål og markedsstrategier for å nå målene.",c:"Mål, strategier og forretningsidé"},
+// ── Etikk, samfunnsansvar og bærekraft ──
+{t:"Bærekraft",d:"Utvikling som imøtekommer dagens behov uten å ødelegge mulighetene for at kommende generasjoner skal få dekket sine behov.",c:"Etikk, samfunnsansvar og bærekraft"},
+{t:"Etikk",d:"Læren om fellesskapsverdier i et samfunn og de normene og reglene som må følges for å virkeliggjøre disse verdiene.",c:"Etikk, samfunnsansvar og bærekraft"},
+{t:"Samfunnsansvar",d:"Forpliktelse virksomheter har til å skape en bærekraftig økonomisk utvikling i samarbeid med de ansatte, deres familie, lokalsamfunnet og samfunnet ellers, for å øke alles livskvalitet.",c:"Etikk, samfunnsansvar og bærekraft"},
+{t:"Sirkulær verdikjede",d:"En verdikjede der de involverte partene tar det fulle og hele ansvaret for produktenes livssyklus.",c:"Etikk, samfunnsansvar og bærekraft"},
+{t:"Sirkulær økonomi",d:"En teori som går ut på at hele vår samfunnsøkonomi bør bygge på at alle bedrifter tar ansvar for å forlenge produktenes livssyklus, det vil si at ressursene forblir i ressurskretsløpet lengst mulig.",c:"Etikk, samfunnsansvar og bærekraft"},
 
-  // Vekststrategier
-  {t:"Vekststrategier",d:"Markedsføringsstrategier for hvordan virksomheten skal vokse: markedsinntrengning, markedsutvikling, produktutvikling og diversifikasjon.",c:"Vekststrategier"},
-  {t:"Markedsinntrengning",d:"Vekststrategi som går ut på å øke markedsandelene for eksisterende produkter.",c:"Vekststrategier"},
-  {t:"Markedsutvikling",d:"Vekststrategi som går ut på å finne nye markeder for eksisterende produkter.",c:"Vekststrategier"},
-  {t:"Produktutvikling",d:"Vekststrategi som går ut på å lansere nye produkter på samme marked.",c:"Vekststrategier"},
-  {t:"Diversifikasjon",d:"Vekststrategi som går ut på å satse på nye markeder med helt nye produkter.",c:"Vekststrategier"},
-  {t:"Innovasjon",d:"Et helt nytt produkt eller en helt ny løsning eller tjeneste.",c:"Vekststrategier"},
+// ── Mål, strategier og forretningsidé ──
+{t:"Forretningsidé",d:"De forretningsmulighetene som vi finner frem til ut fra markedsbehov, kunder, produkter og konkurransefortrinn.",c:"Mål, strategier og forretningsidé"},
+{t:"Markedsmål",d:"Mål for virksomhetens markedsføring i markedsplanleggingsperioden, som vanligvis er ett år.",c:"Mål, strategier og forretningsidé"},
+{t:"Markedsplan",d:"Plan for markedsføringen det kommende året. Den inneholder blant annet situasjonsanalyse, markedsmål, markedsstrategier og kampanjeplaner.",c:"Mål, strategier og forretningsidé"},
+{t:"Markedsplanlegging",d:"En bevisst og systematisk innsamling og analyse av markedsdata, fastsetting av markedsmål og markedsstrategier for å nå målene.",c:"Mål, strategier og forretningsidé"},
+{t:"Markedsplanleggingsmodell",d:"Punktene i en markedsplan som består av forretningsidé, overordnede mål og strategier, situasjonsanalyse, markedsmål, markedsstrategier, kampanjeplaner og kontrollrutiner.",c:"Mål, strategier og forretningsidé"},
+{t:"Markedsstrategier",d:"Strategier for å nå markedsmålene. Strategiene er fastsettelse av målgrupper og bruken av konkurransemidlene produkt, pris, distribusjon og markedskommunikasjon. Noen regner også personalet som et eget virkemiddel.",c:"Mål, strategier og forretningsidé"},
+{t:"Misjon",d:"Et uttrykk for hvorfor virksomheten eksisterer, og hva den kan tilby kundene.",c:"Mål, strategier og forretningsidé"},
+{t:"Mål",d:"En ønsket tilstand på et fremtidig tidspunkt.",c:"Mål, strategier og forretningsidé"},
+{t:"Overordnede mål",d:"Selve grunnlaget for en organisasjons virksomhet. Et viktig overordnet mål for en bedrift er størst mulig overskudd.",c:"Mål, strategier og forretningsidé"},
+{t:"Overordnede strategier",d:"Strategier for å nå de overordnede målene.",c:"Mål, strategier og forretningsidé"},
+{t:"Prestasjonsmål",d:"Et slags barometer som varsler virksomheten om at den går i riktig eller feil retning. Kalles gjerne for KPI (Key Performance Indicators).",c:"Mål, strategier og forretningsidé"},
+{t:"Strategi",d:"Tiltak for å nå mål.",c:"Mål, strategier og forretningsidé"},
+{t:"Visjon",d:"Et fremtidsbilde og noe vi ønsker skal skje.",c:"Mål, strategier og forretningsidé"},
 
-  // Konkurransestrategier
-  {t:"Konkurransestrategier",d:"Strategier med utgangspunkt i konkurransesituasjonen: markedslederstrategi, markedsutfordrerstrategi, markedsfølgerstrategi og nisjestrategi.",c:"Konkurransestrategier"},
-  {t:"Markedslederstrategi",d:"Konkurransestrategi som går ut på å være den dominerende i markedet.",c:"Konkurransestrategier"},
-  {t:"Markedsutfordrerstrategi",d:"Konkurransestrategi som går ut på å ta opp kampen med markedslederen.",c:"Konkurransestrategier"},
-  {t:"Markedsfølgerstrategi",d:"Konkurransestrategi som går ut på å etterligne markedslederens produkter etter at de er kommet på markedet.",c:"Konkurransestrategier"},
-  {t:"Nisjestrategi",d:"Konkurransestrategi som går ut på å utnytte spesialkompetanse og konsentrere seg om små og særegne segmenter.",c:"Konkurransestrategier"},
-  {t:"Differensiering",d:"Det å gjøre et produkt eller en tjeneste forskjellig fra konkurrentenes, slik at det oppleves som unikt.",c:"Konkurransestrategier"},
-  {t:"Pioner",d:"En virksomhet som er først ute med et nytt produkt eller en tjeneste i et marked.",c:"Konkurransestrategier"},
-  {t:"Stordriftsfordeler",d:"Kostnadsfordeler som oppstår når volum øker slik at kostnaden per enhet synker.",c:"Konkurransestrategier"},
+// ── Situasjonsanalyse og bransjeanalyse ──
+{t:"Arbeidsbetingelser",d:"Forhold som påvirker virksomhetens beslutninger og markedsføring. De deles inn i to hovedgrupper: interne (de som gjelder innad i virksomheten) og eksterne (de som gjelder forhold utenfor virksomheten).",c:"Situasjonsanalyse og bransjeanalyse"},
+{t:"Bransjeanalyse",d:"Kartlegging av konkurransen i en bransje. Porters modell om fem konkurransekrefter pluss fire nye konkurransekrefter som avspeiler dagens virkelighet, er verktøy vi kan bruke i bransjeanalysen.",c:"Situasjonsanalyse og bransjeanalyse"},
+{t:"Eksterne arbeidsbetingelser",d:"Ytre faktorer som påvirker virksomhetens markedsstrategier og beslutninger, for eksempel konkurrentenes markedsføring og markedssituasjonen.",c:"Situasjonsanalyse og bransjeanalyse"},
+{t:"Interne arbeidsbetingelser",d:"Forhold i virksomheten som påvirker markedsstrategier og beslutninger, for eksempel virksomhetens økonomi, de ansattes kompetanse og produktene som tilbys markedet.",c:"Situasjonsanalyse og bransjeanalyse"},
+{t:"Konkurrentanalyse",d:"Analyse av konkurrentene som ledd i situasjonsanalysen.",c:"Situasjonsanalyse og bransjeanalyse"},
+{t:"Konkurrenter",d:"De som kjemper om de samme kundene på et marked.",c:"Situasjonsanalyse og bransjeanalyse"},
+{t:"Situasjonsanalyse",d:"Analyse av virksomhetens interne og eksterne arbeidsbetingelser.",c:"Situasjonsanalyse og bransjeanalyse"},
+{t:"Substitutt",d:"Produkt som ikke er identisk med produktene som finnes i bransjen, men som likevel kan erstatte dem.",c:"Situasjonsanalyse og bransjeanalyse"},
+{t:"SWOT-analyse (SOFT-analyse)",d:"Et analyseskjema vi benytter for å analysere de interne arbeidsbetingelsene (sterke og svake sider) og de eksterne arbeidsbetingelsene (muligheter og trusler).",c:"Situasjonsanalyse og bransjeanalyse"},
 
-  // Segmentering og målgruppe
-  {t:"Marked",d:"Samling av kjøpere og selgere som forhandler om et spesielt produkt eller grupper av produkter.",c:"Segmentering og målgruppe"},
-  {t:"Markedssegmentering",d:"Oppsplitting av markedet i delmarkeder med visse fellestrekk.",c:"Segmentering og målgruppe"},
-  {t:"Segment",d:"En avgrenset del av et marked med felles kjennetegn.",c:"Segmentering og målgruppe"},
-  {t:"Segmenteringskriterier",d:"Variablene man bruker for å dele markedet inn i segmenter: geografiske, demografiske, psykografiske og atferdsbaserte.",c:"Segmentering og målgruppe"},
-  {t:"Geografisk segmentering",d:"Segmentering basert på geografiske variabler som land, region, by eller klima.",c:"Segmentering og målgruppe"},
-  {t:"Demografisk segmentering",d:"Segmentering basert på målbare kjennetegn som alder, kjønn, inntekt og utdanning.",c:"Segmentering og målgruppe"},
-  {t:"Psykografisk segmentering",d:"Segmentering basert på livsstil, verdier, interesser og personlighetstrekk.",c:"Segmentering og målgruppe"},
-  {t:"Atferdssegmentering",d:"Segmentering basert på forbrukernes kjøps- og bruksatferd, for eksempel kjøpshyppighet og merkelojalitet.",c:"Segmentering og målgruppe"},
-  {t:"Målgruppe",d:"Utvalgt segment som vi ønsker å nå i markedsføringen.",c:"Segmentering og målgruppe"},
-  {t:"Udifferensiert målgruppevalg",d:"Strategi der virksomheten retter seg mot hele markedet med ett og samme markedstilbud.",c:"Segmentering og målgruppe"},
-  {t:"Differensiert målgruppevalg",d:"Strategi der virksomheten velger flere segmenter og utvikler et tilpasset markedstilbud til hvert av dem.",c:"Segmentering og målgruppe"},
-  {t:"Konsentrert målgruppevalg",d:"Strategi der virksomheten velger ett segment og konsentrerer alle ressurser om å betjene dette best mulig.",c:"Segmentering og målgruppe"},
-  {t:"Individuelt målgruppevalg",d:"Strategi der virksomheten tilpasser markedstilbudet til den enkelte kunde.",c:"Segmentering og målgruppe"},
-  {t:"Nisjemarkedsføring",d:"Markedsføring rettet mot et smalt og spesifikt segment der virksomheten kan utnytte spesialkompetanse.",c:"Segmentering og målgruppe"},
-  {t:"Behov",d:"Å trenge noe som kan oppheve en fysiologisk, psykologisk eller praktisk mangeltilstand.",c:"Segmentering og målgruppe"},
-  {t:"Nytte",d:"Den verdien eller tilfredsstillelsen en forbruker opplever ved å bruke et produkt.",c:"Segmentering og målgruppe"},
-  {t:"Brukerstatus",d:"Klassifisering av forbrukere etter om de er ikke-brukere, potensielle brukere, førstegangsbrukere eller faste brukere.",c:"Segmentering og målgruppe"},
-  {t:"Bruksgrad",d:"Hvor mye av et produkt en forbruker bruker i en gitt periode.",c:"Segmentering og målgruppe"},
-  {t:"Kultur",d:"Ideer, verdier, regler og normer som et menneske overtar fra andre i et samfunn og forsøker å bringe videre.",c:"Segmentering og målgruppe"},
-  {t:"Subkultur",d:"En gruppe innenfor en større kultur som deler bestemte verdier og atferdsmønstre som skiller seg fra hovedkulturen.",c:"Segmentering og målgruppe"},
+// ── Segmentering og målgruppe ──
+{t:"Kundens levetidsverdi",d:"Tall som indikerer hva en kunde er verdt for virksomheten i kundens livsløp, og som vi får frem ved bruk av denne ligningen: Levetidsverdi = gjennomsnittlig salg x antall gjenkjøp x fortjeneste i prosent.",c:"Segmentering og målgruppe"},
+{t:"Markedssegment",d:"Del av et marked.",c:"Segmentering og målgruppe"},
+{t:"Markedssegmentering",d:"Oppsplitting av markedet i delmarkeder med visse fellestrekk. Dette er de vanligste segmenteringskriteriene: geografisk, demografisk, psykografisk og segmentering etter atferd.",c:"Segmentering og målgruppe"},
+{t:"Målgruppe",d:"Utvalgt segment som vi ønsker å nå i markedsføringen. Følgende fire strategier er aktuelle innenfor målgruppevalg: udifferensiert, differensiert, konsentrert og individuelt.",c:"Segmentering og målgruppe"},
 
-  // Merkevare og posisjonering
-  {t:"Merkevare",d:"Et standardisert produkt med et merke som skal skape gjenkjenning og tilleggsfordeler hos kjøperne.",c:"Merkevare og posisjonering"},
-  {t:"Merkevarebygging",d:"Arbeidet med å gi en merkevare verdier (forventninger), slik at kjøperen opplever å kjøpe mer enn bare produktet.",c:"Merkevare og posisjonering"},
-  {t:"Merkevareplattform",d:"Merkevarens DNA: merkevarekjerne, merkepersonlighet og merkeverdier.",c:"Merkevare og posisjonering"},
-  {t:"Merkepersonlighet",d:"De menneskelige egenskapene som knyttes til en merkevare.",c:"Merkevare og posisjonering"},
-  {t:"Merkeverdi",d:"Tilleggsfordelen som produktet oppnår hos forbrukerne på grunn av merket.",c:"Merkevare og posisjonering"},
-  {t:"Merkekunnskap",d:"Kunnskapen, oppfatningen eller tankene forbrukeren har om en merkevare.",c:"Merkevare og posisjonering"},
-  {t:"Merkekjennskap",d:"Kjennskapen forbrukerne har til en bestemt merkevare.",c:"Merkevare og posisjonering"},
-  {t:"Merkekommunikasjon",d:"Måten vi kommuniserer med markedet på som et ledd i merkevarebyggingen.",c:"Merkevare og posisjonering"},
-  {t:"Merkeutvidelse",d:"Strategi for å bruke et eksisterende merke i nye sammenhenger, enten med mormerket eller et helt nytt merke.",c:"Merkevare og posisjonering"},
-  {t:"Merkeelement",d:"Alt som omgir merkevaren: logo, farge, slagord, design og symboler.",c:"Merkevare og posisjonering"},
-  {t:"Varemerke",d:"Et kjennetegn for en vare eller tjeneste som skiller den fra andre varer og tjenester.",c:"Merkevare og posisjonering"},
-  {t:"Logo",d:"Et unikt symbol (bokstaver, tall eller figur) som letter identifikasjonen av en virksomhet.",c:"Merkevare og posisjonering"},
-  {t:"Posisjonering",d:"Arbeidet med å skape en bestemt oppfatning av et produkts egenart i folks bevissthet, i forhold til konkurrentene.",c:"Merkevare og posisjonering"},
-  {t:"Posisjon",d:"Den plassen en merkevare har i forbrukerens bevissthet i forhold til konkurrerende produkter.",c:"Merkevare og posisjonering"},
-  {t:"Top of mind awareness",d:"Når en merkevare er den første forbrukeren tenker på innenfor en bestemt produktkategori.",c:"Merkevare og posisjonering"},
-  {t:"Lojalitet",d:"Graden av tilknytning en kunde har til en merkevare, som gjør at kunden gjentatte ganger velger det samme.",c:"Merkevare og posisjonering"},
+// ── Konkurransestrategier ──
+{t:"Konkurransemidler",d:"Virkemidler for å nå markedsmål. De kalles også de fire P-ene: produkt, pris, plass (distribusjon) og påvirkning (markedskommunikasjon). Noen inkluderer også personalet, slik at det blir fem P-er.",c:"Konkurransestrategier"},
+{t:"Konkurransestrategier",d:"Strategier som tar utgangspunkt i konkurransesituasjonen på markedet. Fire vanlige strategier er markedslederstrategi, markedsutfordrerstrategi, markedsfølgerstrategi og nisjestrategi.",c:"Konkurransestrategier"},
+{t:"Markedsfølgerstrategi",d:"Konkurransestrategi som går ut på å etterligne markedslederens produkter etter at de er kommet på markedet.",c:"Konkurransestrategier"},
+{t:"Markedslederstrategi",d:"Konkurransestrategi som går ut på å være den dominerende i markedet.",c:"Konkurransestrategier"},
+{t:"Markedsutfordrerstrategi",d:"Konkurransestrategi som går ut på å ta opp kampen med markedslederen.",c:"Konkurransestrategier"},
+{t:"Nisjestrategi",d:"Konkurransestrategi som går ut på å utnytte spesialkompetanse og konsentrere seg om små og særegne segmenter i markedet.",c:"Konkurransestrategier"},
 
-  // Produkt
-  {t:"Produkt",d:"Alt som kan tilbys markedet for å dekke behov.",c:"Produkt"},
-  {t:"Produktløftet",d:"Det en virksomhet lover kunden at produktet skal levere.",c:"Produkt"},
-  {t:"Produktstrategi",d:"Markedsstrategier med utgangspunkt i produktet, for eksempel sortiment, produktutvikling og service.",c:"Produkt"},
-  {t:"Metaprodukt",d:"Det utvidede produktbegrepet som inkluderer tilleggstjenester, garantier og service utover kjerneproduktet.",c:"Produkt"},
-  {t:"Produkttesting",d:"Systematisk utprøving av et produkt for å vurdere kvalitet og markedspotensial.",c:"Produkt"},
-  {t:"Heterogene produkter",d:"Produkter som skiller seg fra hverandre slik at forbrukeren ikke oppfatter dem som likeverdige.",c:"Produkt"},
-  {t:"Homogene produkter",d:"Produkter som er så like at forbrukeren oppfatter dem som identiske.",c:"Produkt"},
+// ── Merkevare og posisjonering ──
+{t:"Logo",d:"Et unikt symbol (bokstaver, tall eller figur) som letter identifikasjonen av en virksomhet.",c:"Merkevare og posisjonering"},
+{t:"Merkeelement",d:"Alt som omgir merkevaren, som logo, farge, slagord, design og symboler.",c:"Merkevare og posisjonering"},
+{t:"Merkekjennskap",d:"Kjennskapen som forbrukerne har til et bestemt merkevare.",c:"Merkevare og posisjonering"},
+{t:"Merkekommunikasjon",d:"Måten vi kommuniserer med markedet på som et ledd i merkevarebyggingen.",c:"Merkevare og posisjonering"},
+{t:"Merkekunnskap",d:"Kunnskapen, oppfatningen eller tankene forbrukeren har om en merkevare.",c:"Merkevare og posisjonering"},
+{t:"Merkeutvidelse",d:"Strategier vi kan bruke i merkevarebyggingen når det er spørsmål om å bruke merket i nye sammenhenger. Det er to mulige løsninger: å bruke det eksisterende merket (mormerket) på det nye produktet eller utvikle et helt nytt merke.",c:"Merkevare og posisjonering"},
+{t:"Merkevare",d:"Et standardisert produkt med et merke (for eksempel navn, symbol eller et tegn) som skal skape gjenkjenning, og som oppnår tilleggsfordeler hos kjøperne på grunn av merket.",c:"Merkevare og posisjonering"},
+{t:"Merkevarebygging",d:"Arbeidet med å gi en merkevare verdier (forventninger), slik at kjøperen får en følelse av at han kjøper mer enn bare produktet.",c:"Merkevare og posisjonering"},
+{t:"Merkevareplattform",d:"Merkevarens DNA, dens personlighet og måten det er naturlig å uttrykke merkevaren på. Merkevareplattformen består av merkevarekjerne, merkepersonlighet og merkeverdier.",c:"Merkevare og posisjonering"},
+{t:"Merkeverdi",d:"Tilleggsfordelen som produktet oppnår hos forbrukerne på grunn av merket.",c:"Merkevare og posisjonering"},
+{t:"Omdømme",d:"Omgivelsenes oppfatning av en organisasjon over tid.",c:"Merkevare og posisjonering"},
+{t:"Posisjonering",d:"Arbeidet med å skape en bestemt oppfatning i folks bevissthet av et produkts egenart slik at det oppnår en bestemt posisjon i forhold til konkurrerende produkter.",c:"Merkevare og posisjonering"},
+{t:"Varemerke",d:"Et kjennetegn for en vare eller tjeneste som skiller varen eller tjenesten fra andre varer og tjenester.",c:"Merkevare og posisjonering"},
 
-  // Pris
-  {t:"Pris",d:"Det forbrukeren må betale for en vare eller tjeneste.",c:"Pris og prisstrategi"},
-  {t:"Prisstrategi",d:"Aktiviteter for å finne produktets optimale pris i forbindelse med bedriftens mål.",c:"Pris og prisstrategi"},
-  {t:"Kostnadsbasert prissetting",d:"Prissettingsmetode der selgeren beregner en viss prosent i tillegg til innkjøpsprisen.",c:"Pris og prisstrategi"},
-  {t:"Konkurransebasert prissetting",d:"Prissettingsmetode der prisen fastsettes med utgangspunkt i konkurrentenes priser.",c:"Pris og prisstrategi"},
-  {t:"Verdibasert prissetting",d:"Prissettingsmetode der prisen beregnes ut fra hva markedet er villig til å betale.",c:"Pris og prisstrategi"},
-  {t:"Dynamisk prising",d:"Prissettingsmetode der prisen endres i sanntid basert på etterspørsel, tidspunkt eller kundesegment.",c:"Pris og prisstrategi"},
-  {t:"Kontekstuell prising",d:"Prissetting som avhenger av i hvilken sammenheng produktet kjøpes.",c:"Pris og prisstrategi"},
-  {t:"Psykologisk prising",d:"Prissettingsmetode som spiller på forbrukernes følelser.",c:"Pris og prisstrategi"},
-  {t:"Tallet 9",d:"Prispsykologisk virkemiddel der priser settes like under et rundt tall for å virke lavere.",c:"Pris og prisstrategi"},
-  {t:"Tallet i midten",d:"Prispsykologisk prinsipp der forbrukere tenderer til å velge det midterste prisalternativet.",c:"Pris og prisstrategi"},
-  {t:"Terskelverdi",d:"Det prisnivået der forbrukeren opplever at prisen går fra akseptabel til for høy.",c:"Pris og prisstrategi"},
-  {t:"Lokkedue",d:"Prispsykologisk virkemiddel der man tilbyr et åpenbart dårligere alternativ for å styre kunden mot et annet.",c:"Pris og prisstrategi"},
-  {t:"Kontrast",d:"Prispsykologisk virkemiddel der produkter med ulik pris plasseres ved siden av hverandre for å påvirke verdioppfatningen.",c:"Pris og prisstrategi"},
-  {t:"Rabatt",d:"Prisavslag som gis ved enkelthandlinger, for eksempel ved kontant betaling eller stort kvantum.",c:"Pris og prisstrategi"},
-  {t:"Bonus",d:"En prisfordel kunden får etter en gitt periode hvis avtalte aktiviteter er utført.",c:"Pris og prisstrategi"},
-  {t:"Avgift",d:"Offentlig pålagt kostnad som legges til prisen, for eksempel merverdiavgift.",c:"Pris og prisstrategi"},
-  {t:"Etterspørsel",d:"Den mengden av en vare som kjøperne ønsker å kjøpe til en gitt pris.",c:"Pris og prisstrategi"},
-  {t:"Tilbud",d:"Den mengden av en vare som selgerne ønsker å selge til en gitt pris.",c:"Pris og prisstrategi"},
+// ── Markedsmiks ──
+{t:"Markedsmiks",d:"Sammensetningen av konkurransemidlene vi bruker i markedsføringen.",c:"Markedsmiks"},
 
-  // Distribusjon
-  {t:"Distribusjon",d:"Alle aktiviteter som er nødvendige for å gjøre produktet tilgjengelig for kjøperne.",c:"Distribusjon"},
-  {t:"Distribusjonsform",d:"Om distribusjonen skal skje direkte eller ved hjelp av mellomledd.",c:"Distribusjon"},
-  {t:"Direkte distribusjon",d:"Distribusjonsform der produktet går fra produsent til forbruker uten mellomledd.",c:"Distribusjon"},
-  {t:"Indirekte distribusjon",d:"Distribusjon via mellomledd.",c:"Distribusjon"},
-  {t:"Distribusjonsgrad",d:"Valg mellom intensiv, selektiv eller eksklusiv distribusjon.",c:"Distribusjon"},
-  {t:"Intensiv distribusjon",d:"Distribusjonsstrategi som går ut på å få flest mulig til å selge produktet.",c:"Distribusjon"},
-  {t:"Selektiv distribusjon",d:"Distribusjonsstrategi som går ut på å velge spesielle detaljister.",c:"Distribusjon"},
-  {t:"Eksklusiv distribusjon",d:"Distribusjonsstrategi som går ut på å gi én forhandler enerett.",c:"Distribusjon"},
-  {t:"Distribusjonskanal",d:"Veien produktet følger fra produsent til sluttbruker.",c:"Distribusjon"},
-  {t:"Distribusjonsledd",d:"Deltaker i distribusjonen, for eksempel grossist eller detaljist.",c:"Distribusjon"},
-  {t:"Distribusjonsstrategi",d:"Strategi som innebærer valg av distribusjonsform, distribusjonsgrad og distribusjonskanal.",c:"Distribusjon"},
-  {t:"Grossist",d:"Et mellomledd mellom produsenten og detaljisten.",c:"Distribusjon"},
-  {t:"Detaljist",d:"Det siste leddet i verdikjeden, i dagligtale kalt butikk.",c:"Distribusjon"},
-  {t:"Distributør",d:"Produsentens salgsrepresentant som markedsfører produktene og skaffer ordrer fra detaljister.",c:"Distribusjon"},
-  {t:"Agent",d:"Næringsdrivende som opptrer eller handler på vegne av en annen.",c:"Distribusjon"},
-  {t:"Kommisjonær",d:"En næringsdrivende som selger produkter i eget navn, mens en annen eier produktene.",c:"Distribusjon"},
-  {t:"Leverandør",d:"Den som selger varer eller tjenester til et annet ledd i distribusjonskanalen.",c:"Distribusjon"},
-  {t:"Verdikjede",d:"Kjeden av aktiviteter i produksjon og distribusjon som tilfører produktet verdi.",c:"Distribusjon"},
-  {t:"Makt",d:"I en verdikjede: evnen et ledd har til å påvirke eller kontrollere andre ledd.",c:"Distribusjon"},
-  {t:"Avhengighet",d:"Graden av gjensidig avhengighet mellom leddene i en verdikjede.",c:"Distribusjon"},
-  {t:"Vertikal integrasjon",d:"Strategi der distribusjonsledd slår seg sammen eller kjøper opp ledd bakover eller forover i kanalen.",c:"Distribusjon"},
-  {t:"Horisontal integrasjon",d:"Sammenslutning av ledd på samme nivå i distribusjonskanalen for å oppnå stordriftsfordeler.",c:"Distribusjon"},
-  {t:"Bakover-integrasjon",d:"Når et ledd kjøper opp eller tar kontroll over leverandørleddet.",c:"Distribusjon"},
-  {t:"Forover-integrasjon",d:"Når et ledd kjøper opp eller tar kontroll over et ledd fremover i kjeden.",c:"Distribusjon"},
-  {t:"Vertikalt samarbeid",d:"Samarbeid mellom distribusjonsledd på forskjellige nivåer.",c:"Distribusjon"},
-  {t:"Horisontalt samarbeid",d:"Samarbeid mellom ledd på samme nivå i distribusjonskanalen.",c:"Distribusjon"},
-  {t:"Multikanalstrategi",d:"Distribusjonsstrategi der virksomheten behandler hver kanal for seg.",c:"Distribusjon"},
-  {t:"Omnikanalstrategi",d:"Distribusjonsstrategi der kunden kan se, oppleve og handle overalt, og kanalene samarbeider enhetlig.",c:"Distribusjon"},
-  {t:"Sirkulær verdikjede",d:"Verdikjede der de involverte partene tar fullt ansvar for produktenes livssyklus.",c:"Distribusjon"},
+// ── Produkt ──
+{t:"Innovasjon",d:"Et helt nytt produkt eller en helt ny løsning eller tjeneste.",c:"Produkt"},
+{t:"Produkt",d:"Alt som kan tilbys markedet for å dekke behov.",c:"Produkt"},
+{t:"Produktstrategi",d:"Markedsstrategier med utgangspunkt i produktet, for eksempel beslutninger om sortimentet, produktutvikling og graden av service som tilbys kundene.",c:"Produkt"},
 
-  // Kommunikasjon
-  {t:"Markedskommunikasjon",d:"Tiltak fra en identifiserbar avsender for å informere og påvirke mottakere for å øke avsetning av varer og tjenester.",c:"Kommunikasjon og mediemiks"},
-  {t:"Kommunikasjonsstrategi",d:"Strategi vi benytter når vi formidler informasjon til markedet.",c:"Kommunikasjon og mediemiks"},
-  {t:"Kommunikasjonsform",d:"Typer av kommunikasjon til markedet, for eksempel reklame, PR og salgsfremmende tiltak.",c:"Kommunikasjon og mediemiks"},
-  {t:"Kommunikasjonskanal",d:"Midlet eller mediet vi benytter for å bringe budskapet ut til målgruppen.",c:"Kommunikasjon og mediemiks"},
-  {t:"Kommunikasjonsmiks",d:"Kommunikasjonsformene vi benytter i de ulike kanalene.",c:"Kommunikasjon og mediemiks"},
-  {t:"Mediemiks",d:"Samlingen av mediekanalene vi benytter i kommunikasjonen med markedet.",c:"Kommunikasjon og mediemiks"},
-  {t:"Budskap",d:"Informasjonen vi vil formidle.",c:"Kommunikasjon og mediemiks"},
-  {t:"Appell",d:"Virkemiddel i kommunikasjon: rasjonell (logos), emosjonell (patos) og moralsk (etos).",c:"Kommunikasjon og mediemiks"},
-  {t:"Reklame",d:"Betalt, ikke-personlig kommunikasjon fra en identifiserbar avsender, rettet mot en målgruppe gjennom massemedier.",c:"Kommunikasjon og mediemiks"},
-  {t:"PR",d:"Kommunikasjonsform som handler om å bygge omdømme gjennom relasjoner med medier, interessenter og offentligheten.",c:"Kommunikasjon og mediemiks"},
-  {t:"Salgsfremmende tiltak",d:"Kortsiktige virkemidler som skal stimulere til økt salg, for eksempel konkurranser, kuponger og gratisprøver.",c:"Kommunikasjon og mediemiks"},
-  {t:"Personlig kommunikasjon",d:"Kommunikasjon mellom mennesker.",c:"Kommunikasjon og mediemiks"},
-  {t:"Ikke-personlig kommunikasjon",d:"Kommunikasjon ved bruk av medier, for eksempel TV, radio og sosiale medier.",c:"Kommunikasjon og mediemiks"},
-  {t:"Direkte markedsføring",d:"Kommunikasjon direkte til den enkelte forbruker, for eksempel via e-post eller SMS.",c:"Kommunikasjon og mediemiks"},
-  {t:"POEM",d:"Kommunikasjonsmodell som skiller mellom kjøpte (paid), eide (owned) og fortjente (earned) medier.",c:"Kommunikasjon og mediemiks"},
-  {t:"Kjøpte medier",d:"Kommunikasjonskanaler virksomheten betaler for, for eksempel annonseplass og sponsede innlegg.",c:"Kommunikasjon og mediemiks"},
-  {t:"Eide medier",d:"Kanaler virksomheten selv eier og kontrollerer, for eksempel egne nettsider og nyhetsbrev.",c:"Kommunikasjon og mediemiks"},
-  {t:"Fortjente medier",d:"Medieomtale virksomheten oppnår uten å betale, for eksempel presseomtale og delinger.",c:"Kommunikasjon og mediemiks"},
-  {t:"Influensermarkedsføring",d:"Markedsføring som benytter meningsskapere og trendsettere til å utføre kommunikasjonen.",c:"Kommunikasjon og mediemiks"},
-  {t:"Innholdsmarkedsføring",d:"Strategi der virksomheten skaper og deler verdifullt innhold for å tiltrekke en definert målgruppe.",c:"Kommunikasjon og mediemiks"},
-  {t:"Viral markedsføring",d:"En «snakkis» som deles på sosiale medier.",c:"Kommunikasjon og mediemiks"},
-  {t:"Munn-til-munn-markedsføring",d:"Markedsføring som spres ved at kunder forteller andre om sine erfaringer.",c:"Kommunikasjon og mediemiks"},
-  {t:"SEO",d:"Søkemotoroptimalisering: arbeidet med å få egen nettside så høyt opp som mulig hos søkemotorene.",c:"Kommunikasjon og mediemiks"},
-  {t:"Programmatisk annonsering",d:"System der annonseplassen kjøpes og selges automatisk av dataprogrammer via en annonsebørs.",c:"Kommunikasjon og mediemiks"},
-  {t:"Nettannonsering",d:"Betalt annonsering på internett, inkludert bannerannonser, søkeordsannonsering og SoMe-annonser.",c:"Kommunikasjon og mediemiks"},
-  {t:"Sosiale medier (SoMe)",d:"Digitale plattformer der brukere kan skape, dele og samhandle rundt innhold.",c:"Kommunikasjon og mediemiks"},
-  {t:"Digitale kanaler",d:"Kommunikasjonskanaler som bruker digital teknologi, for eksempel nettsider, SoMe og apper.",c:"Kommunikasjon og mediemiks"},
-  {t:"Analoge kanaler",d:"Tradisjonelle kommunikasjonskanaler som ikke er digitale, for eksempel trykte aviser og plakater.",c:"Kommunikasjon og mediemiks"},
-  {t:"Trykte kanaler",d:"Kommunikasjonskanaler basert på trykt materiale, for eksempel aviser, magasiner og brosjyrer.",c:"Kommunikasjon og mediemiks"},
-  {t:"Podkast",d:"Redigert lydprogram som distribueres på internett.",c:"Kommunikasjon og mediemiks"},
-  {t:"Sponsorat",d:"Avtale der en virksomhet gir støtte i bytte mot eksponering og assosiasjoner.",c:"Kommunikasjon og mediemiks"},
-  {t:"Vareplassering",d:"Strategisk plassering av et merkeprodukt i underholdningsinnhold som film eller TV-serier.",c:"Kommunikasjon og mediemiks"},
+// ── Pris og prisstrategi ──
+{t:"Bonus",d:"En prisfordel kunden får etter en gitt periode hvis han har utført avtalte aktiviteter, for eksempel kjørt skadefritt i ett år.",c:"Pris og prisstrategi"},
+{t:"Konkurransebasert prissetting",d:"Prissettingsmetode der prisen fastsettes med utgangspunkt i konkurrentenes priser.",c:"Pris og prisstrategi"},
+{t:"Kontekstuell prising",d:"Prissetting som avhenger av i hvilken sammenheng produktet kjøpes.",c:"Pris og prisstrategi"},
+{t:"Kostnadsbasert prissetting",d:"Prissettingsmetode der selgeren beregner en viss prosent i tillegg til innkjøpsprisen for å dekke egne kostnader og for å oppnå en viss fortjeneste.",c:"Pris og prisstrategi"},
+{t:"Pris",d:"Det forbrukeren må betale for en vare eller tjeneste.",c:"Pris og prisstrategi"},
+{t:"Prisstrategi",d:"Aktiviteter for å finne produktets optimale pris sett i forbindelse med bedriftens mål.",c:"Pris og prisstrategi"},
+{t:"Psykologisk prising",d:"Prissettingsmetode som spiller på forbrukernes følelser.",c:"Pris og prisstrategi"},
+{t:"Rabatt",d:"Prisavslag som blir gitt til kunden ved enkelthandlinger, for eksempel ved at han betaler kontant eller kjøper et stort kvantum.",c:"Pris og prisstrategi"},
+{t:"Verdibasert prissetting",d:"Prissettingsmetode der selgeren beregner prisen ut fra hva han tror at markedet er villig til å betale.",c:"Pris og prisstrategi"},
 
-  // Markedsmiks og konkurransemidler
-  {t:"Konkurransemidler",d:"Virkemidler for å nå markedsmål: produkt, pris, plass (distribusjon) og påvirkning (markedskommunikasjon).",c:"Markedsmiks"},
-  {t:"Markedsmiks",d:"Sammensetningen av konkurransemidlene vi bruker i markedsføringen.",c:"Markedsmiks"},
-  {t:"Markedsstrategier",d:"Strategier for å nå markedsmålene gjennom fastsettelse av målgrupper og bruk av konkurransemidlene.",c:"Markedsmiks"},
-  {t:"Synergieffekt",d:"Merverdi som oppstår når samarbeid gir bedre resultater enn om delene opererer hver for seg.",c:"Markedsmiks"},
+// ── Distribusjon ──
+{t:"Agent",d:"Næringsdrivende som opptrer eller handler på vegne av en annen, for eksempel en produsent.",c:"Distribusjon"},
+{t:"Detaljist",d:"Det siste leddet i verdikjeden, i dagligtale kalt butikk.",c:"Distribusjon"},
+{t:"Direkte distribusjon",d:"Distribusjonsform der produktet distribueres fra produsent til forbruker uten mellomledd.",c:"Distribusjon"},
+{t:"Distribusjon",d:"Alle aktiviteter som er nødvendige for å gjøre produktet tilgjengelig for kjøperne.",c:"Distribusjon"},
+{t:"Distribusjonsform",d:"Uttrykk for hvordan distribusjonen skal skje, det vil si om den skal skje direkte eller ved hjelp av mellomledd.",c:"Distribusjon"},
+{t:"Distribusjonsgrad",d:"Distribusjonsstrategisk beslutning som går på å velge enten intensiv, selektiv eller eksklusiv distribusjon.",c:"Distribusjon"},
+{t:"Distribusjonskanal",d:"Veien produktet følger fra produsenten til sluttbrukeren, det vil si alle distribusjonsleddene produktet skal gå gjennom på sin vei.",c:"Distribusjon"},
+{t:"Distribusjonsledd",d:"Deltaker i distribusjonen, for eksempel en grossist eller detaljist.",c:"Distribusjon"},
+{t:"Distribusjonsstrategi",d:"Strategi som innebærer valg av distribusjonsform, -grad og -kanal.",c:"Distribusjon"},
+{t:"Distributør",d:"Produsentens salgsrepresentant som jobber aktivt med å markedsføre produktene hans og skaffe ordrer fra ulike detaljister. Begrepet brukes også om leddene nedover i distribusjonskanalen som en produsent eller et annet mellomledd i kjeden benytter i distribusjonen.",c:"Distribusjon"},
+{t:"Eksklusiv distribusjon",d:"Distribusjonsstrategi som går ut på å gi én forhandler enerett til å selge produktet.",c:"Distribusjon"},
+{t:"Grossist",d:"Et mellomledd mellom produsenten og detaljisten.",c:"Distribusjon"},
+{t:"Horisontal integrasjon",d:"Sammenslutning av ledd på samme nivå i distribusjonskanalen der hensikten er å oppnå stordriftsfordeler på ett eller flere områder.",c:"Distribusjon"},
+{t:"Horisontalt samarbeid",d:"Samarbeid mellom ledd på samme nivå i distribusjonskanalen.",c:"Distribusjon"},
+{t:"Indirekte distribusjon",d:"Distribusjon via mellomledd.",c:"Distribusjon"},
+{t:"Integrasjon",d:"Å forene noe til en enhet. Det kan skje ved at en virksomhet i verdikjeden kjøper opp eller på andre måter skaffer seg kontroll med andre ledd i kjeden, enten oppover mot leverandørene eller nedover mot distributørene. Det kan også skje ved at flere virksomheter på samme nivå i verdikjeden blir slått sammen.",c:"Distribusjon"},
+{t:"Intensiv distribusjon",d:"Distribusjonsstrategi som går ut på å få flest mulig til å selge produktet.",c:"Distribusjon"},
+{t:"Kommisjonær",d:"En næringsdrivende som selger produkter i eget navn, mens det er en annen person eller bedrift som eier produktene.",c:"Distribusjon"},
+{t:"Leverandør",d:"Den som selger varer eller tjenester til et annet ledd videre i distribusjonskanalen.",c:"Distribusjon"},
+{t:"Multikanalstrategi",d:"Distribusjonsstrategi som går ut på at virksomheten behandler hver kanal for seg. De ulike kanalene, for eksempel egen nettbutikk, egne fysiske butikker og utvalgte detaljister, er mer å regne som konkurrenter enn samarbeidspartnere.",c:"Distribusjon"},
+{t:"Omnikanalstrategi",d:"Distribusjonsstrategi som går ut på å la kunden få mulighet til å se, oppleve og handle alle selgerens produkter overalt. Strategien er å få de ulike kanalene til å samarbeide slik at de oppleves enhetlig av kundene.",c:"Distribusjon"},
+{t:"Selektiv distribusjon",d:"Distribusjonsstrategi som går ut på å velge spesielle detaljister som får tillatelse til å selge produktet.",c:"Distribusjon"},
+{t:"Verdikjede",d:"Kjeden av aktiviteter i produksjonen og distribusjonen som er med på å tilføre produktet verdi.",c:"Distribusjon"},
+{t:"Vertikal integrasjon",d:"En strategi der forskjellige typer distribusjonsledd slår seg sammen, eller ved at et ledd kjøper opp ledd bakover eller forover i distribusjonskanalen. Strategien benyttes gjerne for å ta kontroll over andre ledd i kanalen.",c:"Distribusjon"},
+{t:"Vertikalt samarbeid",d:"Samarbeid mellom distribusjonsledd på forskjellige nivåer.",c:"Distribusjon"},
 
-  // Effektmåling
-  {t:"Effektmåling",d:"Måling av markedsføringens effekt gjennom blant annet ROI, kostnad per salg, kostnad per lead og konverteringsgrad.",c:"Effektmåling"},
-  {t:"Avkastning på investering (ROI)",d:"Mål på lønnsomheten av en investering. Inntekt minus kostnad, delt på kostnaden.",c:"Effektmåling"},
-  {t:"Konverteringsgrad",d:"Andelen som utfører en ønsket handling etter eksponering for et markedsføringstiltak.",c:"Effektmåling"},
-  {t:"Kostnad per lead",d:"Hva det koster å skaffe en potensiell kunde gjennom et tiltak.",c:"Effektmåling"},
-  {t:"Kostnad per salg",d:"Hva det koster å gjennomføre ett salg gjennom et tiltak.",c:"Effektmåling"},
-  {t:"Kundens levetidsverdi",d:"Hva en kunde er verdt over tid: gjennomsnittlig salg × antall gjenkjøp × fortjeneste i prosent.",c:"Effektmåling"},
-  {t:"Evaluering",d:"Systematisk vurdering av om et markedsføringstiltak har nådd målene.",c:"Effektmåling"},
-  {t:"Resultat",d:"Det økonomiske utfallet av virksomhetens aktiviteter.",c:"Effektmåling"},
+// ── Kommunikasjon og mediemiks ──
+{t:"Budskap",d:"Informasjonen vi vil formidle.",c:"Kommunikasjon og mediemiks"},
+{t:"Ikke-personlig kommunikasjon",d:"Kommunikasjon ved bruk av forskjellige medier, for eksempel TV, radio og sosiale medier.",c:"Kommunikasjon og mediemiks"},
+{t:"Influensermarkedsføring",d:"Markedsføring som ikke retter budskapet direkte mot målgruppen, men som i stedet benytter seg av meningsskapere og trendsettere til å utføre markedskommunikasjonen for seg.",c:"Kommunikasjon og mediemiks"},
+{t:"Kommunikasjonsform",d:"Typer av kommunikasjon til markedet, for eksempel reklame, PR og salgsfremmende tiltak.",c:"Kommunikasjon og mediemiks"},
+{t:"Kommunikasjonskanal",d:"Midlet eller mediet vi benytter for å bringe budskapet ut til målgruppen.",c:"Kommunikasjon og mediemiks"},
+{t:"Kommunikasjonsmiks",d:"Kommunikasjonsformene vi benytter i de ulike kanalene for få budskapet ut til målgruppen.",c:"Kommunikasjon og mediemiks"},
+{t:"Kommunikasjonsstrategi",d:"Strategi vi benytter når vi formidler informasjon til markedet.",c:"Kommunikasjon og mediemiks"},
+{t:"Markedskommunikasjon",d:"Tiltak som settes i verk av en identifiserbar avsender, som regel en bedrift, for å informere og påvirke en gruppe av mottakere i den hensikt å øke bedriftens avsetning av varer og tjenester.",c:"Kommunikasjon og mediemiks"},
+{t:"Mediemiks",d:"Samlingen av mediekanalene vi benytter i kommunikasjonen med markedet.",c:"Kommunikasjon og mediemiks"},
+{t:"Medier",d:"Kommunikasjonskanaler vi benytter når vi skal bringe budskapet ut til målgruppen.",c:"Kommunikasjon og mediemiks"},
+{t:"Personlig kommunikasjon",d:"Kommunikasjon mellom mennesker.",c:"Kommunikasjon og mediemiks"},
+{t:"Podkast",d:"Redigert lydprogram som distribueres på internett.",c:"Kommunikasjon og mediemiks"},
+{t:"POEM",d:"Kommunikasjonsmodell som skiller mellom kjøpte, eide og fortjente medier.",c:"Kommunikasjon og mediemiks"},
+{t:"Programmatisk annonsering",d:"Et system der annonseplassen kjøpes og selges automatisk av dataprogrammer via en annonsebørs.",c:"Kommunikasjon og mediemiks"},
+{t:"SEO (Search Engine Optimization)",d:"Søkemotoroptimalisering, det vil si arbeidet med å få egen nettside så høyt opp som mulig hos søkemotorene.",c:"Kommunikasjon og mediemiks"},
+{t:"Viral markedsføring",d:"En «snakkis» som deles på sosiale medier.",c:"Kommunikasjon og mediemiks"},
 
-  // Ledelse og organisasjon
-  {t:"Ledelse",d:"Det å oppnå bestemte resultater eller nå mål gjennom andres arbeidsinnsats.",c:"Ledelse og organisasjon"},
-  {t:"Lederfunksjoner",d:"Lederoppgaver: planlegging, organisering, administrasjon, motivasjon, informasjon, kommunikasjon og beslutninger.",c:"Ledelse og organisasjon"},
-  {t:"Organisasjon",d:"En gruppe mennesker som forsøker å nå bestemte mål gjennom samarbeid.",c:"Ledelse og organisasjon"},
-  {t:"Organisasjonskultur",d:"Felles normer, verdier og virkelighetsoppfatninger som utvikles når medlemmene samhandler med hverandre og omgivelsene.",c:"Ledelse og organisasjon"},
-  {t:"Internmarkedsføring",d:"Markedsføring rettet mot personalet, slik at de blir opplært, trent og motivert til å gjøre en best mulig jobb.",c:"Ledelse og organisasjon"},
-  {t:"Strategisk internmarkedsføring",d:"Langsiktig internmarkedsføring som handler om å skape en kultur der ansatte forstår og støtter strategien.",c:"Ledelse og organisasjon"},
-  {t:"Taktisk internmarkedsføring",d:"Kortsiktig internmarkedsføring med konkrete tiltak som opplæring, informasjon og motivasjon.",c:"Ledelse og organisasjon"},
-  {t:"Ekstern markedsføring",d:"Markedsføring som skjer ved bruk av markedsstrategiene målgruppevalg, produkt, pris, distribusjon og kommunikasjon.",c:"Ledelse og organisasjon"},
-  {t:"Interaktiv markedsføring",d:"Markedsføring som skjer ved at ansatte behandler kundene på best mulig måte i direkte kontakt.",c:"Ledelse og organisasjon"},
-  {t:"Teori X og Y",d:"Teori X: mennesker er late og må kontrolleres. Teori Y: mennesker er selvmotiverte og søker ansvar.",c:"Ledelse og organisasjon"},
-  {t:"Motivasjon",d:"Drivkrefter som får mennesker til å handle.",c:"Ledelse og organisasjon"},
-  {t:"Humankapital",d:"Kompetansen, erfaringen og kunnskapen de ansatte besitter.",c:"Ledelse og organisasjon"},
-  {t:"Medarbeiderskap",d:"De ansattes aktive rolle og ansvar for egen arbeidssituasjon og bidrag til virksomhetens mål.",c:"Ledelse og organisasjon"},
-  {t:"Kompetanseutvikling",d:"Systematisk arbeid med å utvikle de ansattes kunnskaper og ferdigheter i tråd med virksomhetens mål.",c:"Ledelse og organisasjon"},
-  {t:"Personalet",d:"De ansatte, en viktig ressurs som mange regner som et eget virkemiddel i markedsføringen.",c:"Ledelse og organisasjon"},
-  {t:"Kjerneverdi",d:"Egenskaper som bedriften ønsker skal kjennetegne den og dens medarbeidere.",c:"Ledelse og organisasjon"},
-  {t:"Rolle",d:"Et sett normer knyttet til en bestemt oppgave eller posisjon.",c:"Ledelse og organisasjon"},
-  {t:"Total quality management (TQM)",d:"Ledelsesfilosofi som vektlegger kontinuerlig forbedring av kvalitet i alle deler av virksomheten.",c:"Ledelse og organisasjon"},
-  {t:"Maslows behovspyramide",d:"Motivasjonsteori med fem nivåer: fysiologiske behov, trygghet, sosiale behov, anerkjennelse og selvrealisering.",c:"Ledelse og organisasjon"},
+// ── Effektmåling ──
+{t:"Effektmåling",d:"Effekten av markedsføring kan måles blant annet etter avkastning på investeringen, kostnad per salg, kostnad per lead (potensielle kunder) og etter konverteringsgrad.",c:"Effektmåling"},
 
-  // Etikk, samfunnsansvar og bærekraft
-  {t:"Etikk",d:"Læren om fellesskapsverdier i et samfunn og normene og reglene som må følges for å virkeliggjøre disse.",c:"Etikk, samfunnsansvar og bærekraft"},
-  {t:"Samfunnsansvar",d:"Forpliktelse til bærekraftig økonomisk utvikling i samarbeid med ansatte, lokalsamfunn og samfunnet.",c:"Etikk, samfunnsansvar og bærekraft"},
-  {t:"Omdømme",d:"Omgivelsenes oppfatning av en organisasjon over tid.",c:"Etikk, samfunnsansvar og bærekraft"},
-  {t:"Bærekraft",d:"Utvikling som dekker dagens behov uten å ødelegge mulighetene for kommende generasjoner.",c:"Etikk, samfunnsansvar og bærekraft"},
-  {t:"Sirkulær økonomi",d:"Teori om at alle bedrifter bør ta ansvar for å forlenge produktenes livssyklus slik at ressursene forblir i bruk lengst mulig.",c:"Etikk, samfunnsansvar og bærekraft"},
-  {t:"FNs bærekraftsmål",d:"17 globale mål vedtatt av FN i 2015 for bærekraftig utvikling frem mot 2030.",c:"Etikk, samfunnsansvar og bærekraft"},
-  {t:"Åpenhetsloven",d:"Norsk lov som pålegger større virksomheter aktsomhetsvurderinger knyttet til menneskerettigheter og arbeidsforhold.",c:"Etikk, samfunnsansvar og bærekraft"},
-  {t:"Lobbyvirksomhet",d:"Forsøk på å påvirke politiske beslutningstakere til fordel for en bestemt sak eller bransje.",c:"Etikk, samfunnsansvar og bærekraft"},
+// ── Vekststrategier ──
+{t:"Diversifikasjon",d:"Vekststrategi som går ut på å satse på nye markeder med helt nye produkter.",c:"Vekststrategier"},
+{t:"Markedsinntrengning",d:"Vekststrategi som går ut på å øke markedsandelene for eksisterende produkter.",c:"Vekststrategier"},
+{t:"Markedsutvikling",d:"Vekststrategi som går ut på å finne nye markeder for eksisterende produkter.",c:"Vekststrategier"},
+{t:"Produktutvikling",d:"Vekststrategi som går ut på å lansere nye produkter på samme marked.",c:"Vekststrategier"},
+{t:"Vekststrategier",d:"Markedsføringsstrategier for hvordan virksomheten skal vokse. Vekststrategier en virksomhet kan velge, er markedsinntrengning, markedsutvikling, produktutvikling og diversifikasjon.",c:"Vekststrategier"},
 
-  // Diverse / digitalt
-  {t:"Big Data",d:"Teknologi og analysemetodikk for datamengder som er for store for tradisjonelle teknikker.",c:"Digitalt og teknologi"},
-  {t:"Algoritme",d:"En fullstendig og nøyaktig beskrivelse av fremgangsmåten for å løse en oppgave.",c:"Digitalt og teknologi"},
-  {t:"Kunstig intelligens",d:"Informasjonsteknologi som gjør at datamaskiner kan løse oppgaver og justere egen aktivitet uten instruksjon fra mennesker.",c:"Digitalt og teknologi"},
-  {t:"E-postkampanjer",d:"Målrettede markedsføringstiltak der virksomheten sender kommersielle budskap via e-post.",c:"Digitalt og teknologi"},
+// ── Ledelse og organisasjon ──
+{t:"Bedriftskultur",d:"Se organisasjonskultur.",c:"Ledelse og organisasjon"},
+{t:"Ekstern markedsføring",d:"Markedsføring som skjer ved bruk av markedsstrategiene målgruppevalg, produkt, pris, distribusjon, markedskommunikasjon og eventuelt personalet.",c:"Ledelse og organisasjon"},
+{t:"Interaktiv markedsføring",d:"Markedsføring som skjer ved at de ansatte behandler kundene på best mulig måte i direkte kontakt med dem.",c:"Ledelse og organisasjon"},
+{t:"Internmarkedsføring",d:"Markedsføring rettet mot personalet, ved at de blir opplært, trent og motivert slik at de gjør en best mulig jobb. Internmarkedsføringen kan både være taktisk (bruk av praktiske tiltak) og strategisk (grunnleggende og langsiktig).",c:"Ledelse og organisasjon"},
+{t:"Kjerneverdi",d:"Egenskaper som bedriften ønsker skal kjennetegne den og dens medarbeidere.",c:"Ledelse og organisasjon"},
+{t:"Kultur",d:"Ideer, verdier, regler og normer som et menneske overtar fra andre mennesker i et samfunn, og som det forsøker å bringe videre til mennesker som kommer etter, ofte i endret form.",c:"Ledelse og organisasjon"},
+{t:"Ledelse",d:"Det å oppnå bestemte resultater eller å nå mål gjennom andres arbeidsinnsats.",c:"Ledelse og organisasjon"},
+{t:"Lederfunksjoner",d:"Et annet ord for lederoppgaver, som blant annet omfatter planlegging, organisering, administrasjon, motivasjon, informasjon, kommunikasjon og beslutninger.",c:"Ledelse og organisasjon"},
+{t:"Motivasjon",d:"Drivkrefter som får mennesker til å handle.",c:"Ledelse og organisasjon"},
+{t:"Organisasjon",d:"En gruppe mennesker som forsøker å nå bestemte mål gjennom samarbeid.",c:"Ledelse og organisasjon"},
+{t:"Organisasjonskultur",d:"Et sett av felles normer, verdier og virkelighetsoppfatninger som utvikles i en organisasjon når medlemmene samhandler med hverandre og omgivelsene. Organisasjonskulturen kommer til uttrykk i medlemmenes handlinger og holdninger på jobben.",c:"Ledelse og organisasjon"},
+{t:"Organisering",d:"Strukturering og planlegging av aktiviteter for å nå fastsatte mål.",c:"Ledelse og organisasjon"},
 
-  // Virksomhet og grunnbegreper
-  {t:"Virksomhet",d:"Organisasjoner som produserer varer eller tjenester med tanke på å tjene penger.",c:"Grunnbegreper"},
-  {t:"Markedsføring",d:"Prosess for å skaffe kunder og bygge kunderelasjoner gjennom verdiskaping.",c:"Grunnbegreper"},
-  {t:"Markedsføringsledelse",d:"Understreker at markedsføring og ledelse er to sider av samme sak.",c:"Grunnbegreper"},
-  {t:"Holdningsskapende arbeid",d:"Langsiktige tiltak for å påvirke målgruppens holdninger og oppfatninger.",c:"Grunnbegreper"},
+// ── Digitalt og teknologi ──
+{t:"Algoritme",d:"En fullstendig og nøyaktig beskrivelse av fremgangsmåten for å løse en oppgave.",c:"Digitalt og teknologi"},
+{t:"Big Data (stordata)",d:"Teknologi og analysemetodikk knyttet til datamengder som er for store til at man kan benytte tradisjonelle teknikker for å hente ut nyttig informasjon. Big Data er et moteord som ofte benyttes i markedsføringen av selskaper som har utviklet teknologi som er i stand til å behandle slike datasett.",c:"Digitalt og teknologi"},
+{t:"Digitalisering",d:"Tilrettelegging for å utvikle digital informasjon og håndtering og utnytting av informasjonen ved hjelp av informasjonsteknologi.",c:"Digitalt og teknologi"},
+{t:"Globalisering",d:"Økende grad av samhandling, integrasjon, påvirkning og gjensidig avhengighet mellom folk og stater, blant annet innenfor økonomi og teknologi.",c:"Digitalt og teknologi"},
+{t:"Kunstig intelligens",d:"Informasjonsteknologi som gjør at for eksempel datamaskiner kan løse oppgaver og justere egen aktivitet uten instruksjon fra mennesker.",c:"Digitalt og teknologi"}
 ];
 
-// Build topic list
-const topics = [...new Set(TERMS.map(t => t.c))].sort();
-let currentMode = 'all';
-let selectedTopics = new Set();
-let deck = [];
-let currentIndex = 0;
+// ── STORAGE ──
+const SK='mfl2_progress';
+function lp(){try{const r=localStorage.getItem(SK);return r?JSON.parse(r):{terms:{},quizHistory:[]};}catch{return{terms:{},quizHistory:[]};}}
+function sp(d){try{localStorage.setItem(SK,JSON.stringify(d));}catch{}}
+function gts(t){const p=lp();return p.terms[t]||{status:'unseen',qc:0,qw:0};}
+function sts(t,s){const p=lp();if(!p.terms[t])p.terms[t]={status:'unseen',qc:0,qw:0};p.terms[t].status=s;sp(p);}
+function rqa(t,c){const p=lp();if(!p.terms[t])p.terms[t]={status:'unseen',qc:0,qw:0};if(c)p.terms[t].qc++;else{p.terms[t].qw++;if(p.terms[t].status!=='know')p.terms[t].status='practice';}sp(p);}
+function sqr(s,tot){const p=lp();p.quizHistory.push({date:new Date().toISOString(),score:s,total:tot});if(p.quizHistory.length>20)p.quizHistory=p.quizHistory.slice(-20);sp(p);}
+function resetProgress(){if(confirm('Er du sikker på at du vil nullstille all fremgang?')){localStorage.removeItem(SK);renderDashboard();}}
+function mc(t){const s=gts(t);if(s.status==='know')return 'm-green';if(s.status==='practice')return 'm-amber';if(s.qw>0)return 'm-red';return 'm-grey';}
 
-function setMode(mode) {
-  currentMode = mode;
-  document.querySelectorAll('.mode-btn').forEach(b => b.classList.remove('active'));
-  event.target.classList.add('active');
+// ── STATE ──
+const topics=[...new Set(TERMS.map(t=>t.c))];
+let currentMode='all',selectedTopics=new Set(),deck=[],currentIndex=0,flashFilter='all';
+let quizDeck=[],quizIndex=0,quizScore=0,quizAnswers=[];
+const QL=20;
 
-  const grid = document.getElementById('topicGrid');
-  if (mode === 'topic') {
-    grid.style.display = 'grid';
-    renderTopics();
-    selectedTopics.clear();
-    hideCard();
-  } else {
-    grid.style.display = 'none';
-    selectedTopics.clear();
-    buildDeck();
-  }
+// ── MODE ──
+function setMode(m,btn){
+  currentMode=m;
+  document.querySelectorAll('.mode-btn').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  ['topicGrid','cardArea','controls','progressBarContainer','keyHint','emptyState','searchContainer','termList','quizArea','dashboard','flashcardFilter'].forEach(id=>document.getElementById(id).style.display='none');
+  selectedTopics.clear();
+  if(m==='all'){document.getElementById('flashcardFilter').style.display='flex';buildDeck();}
+  else if(m==='topic'){document.getElementById('topicGrid').style.display='grid';renderTopics();document.getElementById('emptyState').style.display='block';}
+  else if(m==='list'){document.getElementById('searchContainer').style.display='block';document.getElementById('termList').style.display='block';document.getElementById('searchInput').value='';renderList();}
+  else if(m==='quiz'){startQuiz();}
+  else if(m==='progress'){document.getElementById('dashboard').style.display='block';renderDashboard();}
 }
 
-function renderTopics() {
-  const grid = document.getElementById('topicGrid');
-  grid.innerHTML = '';
-  topics.forEach(topic => {
-    const count = TERMS.filter(t => t.c === topic).length;
-    const btn = document.createElement('button');
-    btn.className = 'topic-btn';
-    btn.innerHTML = `${topic}<span>${count} begreper</span>`;
-    btn.onclick = () => toggleTopic(topic, btn);
-    grid.appendChild(btn);
-  });
+function renderTopics(){const g=document.getElementById('topicGrid');g.innerHTML='';topics.forEach(topic=>{const c=TERMS.filter(t=>t.c===topic).length;const b=document.createElement('button');b.className='topic-btn';b.innerHTML=`${topic}<span>${c} begreper</span>`;b.onclick=()=>toggleTopic(topic,b);g.appendChild(b);});}
+function toggleTopic(topic,btn){if(selectedTopics.has(topic)){selectedTopics.delete(topic);btn.classList.remove('active');}else{selectedTopics.add(topic);btn.classList.add('active');}selectedTopics.size>0?buildDeck():hideCard();}
+function hideCard(){document.getElementById('cardArea').style.display='none';document.getElementById('controls').style.display='none';document.getElementById('progressBarContainer').style.display='none';document.getElementById('keyHint').style.display='none';document.getElementById('emptyState').style.display=currentMode==='topic'?'block':'none';}
+function setFlashFilter(f,btn){flashFilter=f;document.querySelectorAll('.filter-btn').forEach(b=>b.classList.remove('active'));btn.classList.add('active');buildDeck();}
+
+// ── DECK ──
+function buildDeck(){
+  let src=currentMode==='all'?[...TERMS]:TERMS.filter(t=>selectedTopics.has(t.c));
+  if(flashFilter==='unseen')src=src.filter(t=>gts(t.t).status==='unseen');
+  else if(flashFilter==='practicing')src=src.filter(t=>{const s=gts(t.t);return s.status==='practice'||(s.qw>0&&s.status!=='know');});
+  deck=src;shuf(deck);currentIndex=0;
+  if(!deck.length){document.getElementById('cardArea').style.display='none';document.getElementById('controls').style.display='none';document.getElementById('progressBarContainer').style.display='none';document.getElementById('keyHint').style.display='none';const es=document.getElementById('emptyState');es.style.display='block';es.querySelector('p').textContent=flashFilter==='unseen'?'Du har sett alle begrepene!':flashFilter==='practicing'?'Ingen begreper å øve på. Prøv en quiz!':'Velg ett eller flere temaer.';return;}
+  document.getElementById('emptyState').style.display='none';document.getElementById('cardArea').style.display='block';document.getElementById('controls').style.display='flex';document.getElementById('progressBarContainer').style.display='block';document.getElementById('keyHint').style.display='block';showCard();
+}
+function shuf(a){for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}}
+function showCard(){const c=document.getElementById('card');c.classList.remove('flipped');const t=deck[currentIndex];document.getElementById('cardTopic').textContent=t.c;document.getElementById('cardTerm').textContent=t.t;document.getElementById('cardTermBack').textContent=t.t;document.getElementById('cardDef').textContent=t.d;document.getElementById('progress').textContent=`${currentIndex+1} / ${deck.length}`;document.getElementById('progressFill').style.width=`${((currentIndex+1)/deck.length)*100}%`;requestAnimationFrame(()=>{const f=document.querySelector('.card-front'),b=document.querySelector('.card-back');c.style.height=Math.max(260,f.scrollHeight,b.scrollHeight)+'px';});}
+function flipCard(){document.getElementById('card').classList.toggle('flipped');}
+function nextCard(){if(currentIndex<deck.length-1){currentIndex++;showCard();}}
+function prevCard(){if(currentIndex>0){currentIndex--;showCard();}}
+function shuffleDeck(){shuf(deck);currentIndex=0;showCard();}
+function assessTerm(e,status){e.stopPropagation();sts(deck[currentIndex].t,status);if(currentIndex<deck.length-1){currentIndex++;showCard();}else{const c=document.getElementById('card');c.classList.remove('flipped');showCard();}}
+
+// ── LIST ──
+function renderList(filter=''){
+  const list=document.getElementById('termList'),sorted=[...TERMS].sort((a,b)=>a.t.localeCompare(b.t,'nb')),lf=filter.toLowerCase();
+  const filtered=lf?sorted.filter(t=>t.t.toLowerCase().includes(lf)||t.d.toLowerCase().includes(lf)||t.c.toLowerCase().includes(lf)):sorted;
+  list.innerHTML='';
+  if(filter){list.innerHTML=`<div class="term-count">${filtered.length} treff</div>`;filtered.forEach(t=>list.appendChild(cti(t)));}
+  else{const gr={};filtered.forEach(t=>{if(!gr[t.c])gr[t.c]=[];gr[t.c].push(t);});topics.forEach(th=>{if(!gr[th])return;const h=document.createElement('div');h.className='term-list-header';h.textContent=`${th} (${gr[th].length})`;list.appendChild(h);gr[th].sort((a,b)=>a.t.localeCompare(b.t,'nb')).forEach(t=>list.appendChild(cti(t,true)));});list.insertAdjacentHTML('afterbegin',`<div class="term-count">${TERMS.length} begreper totalt</div>`);}
+}
+function cti(term,hc=false){const i=document.createElement('div');i.className='term-item';const m=mc(term.t);i.innerHTML=`<div class="term-name"><span class="mastery-dot ${m}"></span>${term.t}</div>${hc?'':`<div class="term-cat">${term.c}</div>`}<div class="term-def">${term.d}</div>`;i.onclick=()=>i.classList.toggle('expanded');return i;}
+function filterList(){renderList(document.getElementById('searchInput').value);}
+
+// ── QUIZ ──
+function startQuiz(){const a=document.getElementById('quizArea');a.style.display='block';quizDeck=[...TERMS];shuf(quizDeck);quizDeck=quizDeck.slice(0,QL);quizIndex=0;quizScore=0;quizAnswers=[];rqq();}
+function rqq(){
+  const a=document.getElementById('quizArea');
+  if(quizIndex>=quizDeck.length){rqr();return;}
+  const cur=quizDeck[quizIndex],oth=TERMS.filter(t=>t.t!==cur.t);shuf(oth);const opts=[cur,...oth.slice(0,3)];shuf(opts);
+  let dots='';for(let i=0;i<QL;i++){let c='quiz-dot';if(i<quizAnswers.length)c+=' '+(quizAnswers[i].correct?'correct':'wrong');dots+=`<div class="${c}"></div>`;}
+  a.innerHTML=`<div class="quiz-progress">Spørsmål ${quizIndex+1} av ${QL}</div><div class="quiz-score-bar">${dots}</div><div class="quiz-card"><div class="quiz-topic">${cur.c}</div><div class="quiz-definition">${cur.d}</div><div class="quiz-options">${opts.map((o,i)=>`<button class="quiz-option" onclick="aq(${i},'${esc(o.t)}','${esc(cur.t)}')">${o.t}</button>`).join('')}</div></div>`;
+}
+function esc(s){return s.replace(/'/g,"\\'").replace(/"/g,'&quot;');}
+function aq(idx,chosen,correct){
+  const btns=document.querySelectorAll('.quiz-option'),ok=chosen===correct;
+  btns.forEach((b,i)=>{b.classList.add('disabled');b.onclick=null;if(b.textContent.trim()===correct)b.classList.add('correct');if(i===idx&&!ok)b.classList.add('wrong');});
+  if(ok)quizScore++;rqa(correct,ok);
+  quizAnswers.push({correct:ok,term:correct,userAnswer:chosen,definition:quizDeck[quizIndex].d});
+  document.querySelectorAll('.quiz-dot')[quizIndex].classList.add(ok?'correct':'wrong');
+  const c=document.querySelector('.quiz-card'),b=document.createElement('button');b.className='quiz-next-btn';b.textContent=quizIndex<QL-1?'Neste':'Se resultat';b.onclick=()=>{quizIndex++;rqq();};c.appendChild(b);
+}
+function rqr(){
+  sqr(quizScore,QL);const a=document.getElementById('quizArea'),pct=Math.round(quizScore/QL*100);
+  let msg=pct===100?'Perfekt!':pct>=80?'Veldig bra!':pct>=60?'Ganske bra, men det er rom for forbedring.':pct>=40?'Du er på riktig vei, men bør repetere mer.':'Her bør du bruke litt mer tid på begrepene.';
+  const wr=quizAnswers.filter(a=>!a.correct);
+  let wh='';if(wr.length)wh=`<div class="quiz-wrong-list"><h3>Begreper å se på igjen</h3>${wr.map(w=>`<div class="quiz-wrong-item"><strong>${w.term}</strong><br>${w.definition}</div>`).join('')}</div>`;
+  let dots='';for(let i=0;i<QL;i++)dots+=`<div class="quiz-dot ${quizAnswers[i].correct?'correct':'wrong'}"></div>`;
+  a.innerHTML=`<div class="quiz-result"><h2>Resultat</h2><div class="quiz-score-bar" style="margin-top:1rem">${dots}</div><div class="score-big">${quizScore} / ${QL}</div><p>${msg}</p>${wh}<button class="quiz-next-btn" onclick="startQuiz()">Prøv igjen</button></div>`;
 }
 
-function toggleTopic(topic, btn) {
-  if (selectedTopics.has(topic)) {
-    selectedTopics.delete(topic);
-    btn.classList.remove('active');
-  } else {
-    selectedTopics.add(topic);
-    btn.classList.add('active');
-  }
-  if (selectedTopics.size > 0) {
-    buildDeck();
-  } else {
-    hideCard();
-  }
+// ── DASHBOARD ──
+function renderDashboard(){
+  const d=document.getElementById('dashboard'),p=lp();
+  let kn=0,pr=0,un=0;
+  TERMS.forEach(t=>{const s=(p.terms[t.t]||{}).status||'unseen';if(s==='know')kn++;else if(s==='practice')pr++;else un++;});
+  let bars='';topics.forEach(cat=>{const ct=TERMS.filter(t=>t.c===cat);let ck=0,cp=0;ct.forEach(t=>{const s=(p.terms[t.t]||{}).status||'unseen';if(s==='know')ck++;else if(s==='practice')cp++;});const gp=Math.round(ck/ct.length*100),ap=Math.round(cp/ct.length*100);bars+=`<div class="dash-bar-row"><div class="dash-bar-label">${cat}</div><div class="dash-bar-track"><div class="dash-bar-green" style="width:${gp}%"></div><div class="dash-bar-amber" style="width:${ap}%"></div></div><div class="dash-bar-pct">${gp}%</div></div>`;});
+  let hh='';if(p.quizHistory&&p.quizHistory.length){hh='<div class="dash-history">'+[...p.quizHistory].reverse().map(h=>{const dt=new Date(h.date);return`<div class="dash-history-item"><span class="hist-date">${dt.toLocaleDateString('nb-NO',{day:'numeric',month:'short'})} ${dt.toLocaleTimeString('nb-NO',{hour:'2-digit',minute:'2-digit'})}</span><span class="hist-score">${h.score}/${h.total} (${Math.round(h.score/h.total*100)}%)</span></div>`;}).join('')+'</div>';}else hh='<div class="dash-empty">Ingen quizer tatt ennå.</div>';
+  const wt=TERMS.filter(t=>{const s=p.terms[t.t];return s&&s.qw>0&&s.status!=='know';}).sort((a,b)=>(p.terms[b.t].qw-p.terms[b.t].qc)-(p.terms[a.t].qw-p.terms[a.t].qc)).slice(0,8);
+  let wh='';if(wt.length)wh=wt.map(t=>{const s=p.terms[t.t],tot=s.qc+s.qw;return`<div class="dash-bar-row"><div class="dash-bar-label">${t.t}</div><div class="dash-bar-track"><div class="dash-bar-green" style="width:${Math.round(s.qc/tot*100)}%"></div></div><div class="dash-bar-pct">${s.qc}/${tot}</div></div>`;}).join('');
+  d.innerHTML=`<div class="dash-card"><h2>Oversikt</h2><div class="dash-stats"><div class="dash-stat"><div class="stat-num green">${kn}</div><div class="stat-label">Kan</div></div><div class="dash-stat"><div class="stat-num amber">${pr}</div><div class="stat-label">Øver på</div></div><div class="dash-stat"><div class="stat-num red">${un}</div><div class="stat-label">Ikke sett</div></div></div></div><div class="dash-card"><h2>Fremgang per tema</h2>${bars}</div>${wt.length?`<div class="dash-card"><h2>Begreper å jobbe med</h2>${wh}</div>`:''}<div class="dash-card"><h2>Quizhistorikk</h2>${hh}</div><div style="text-align:center;margin-top:0.5rem"><button class="reset-btn" onclick="resetProgress()">Nullstill all fremgang</button></div>`;
 }
 
-function hideCard() {
-  document.getElementById('cardArea').style.display = 'none';
-  document.getElementById('controls').style.display = 'none';
-  document.getElementById('progressBarContainer').style.display = 'none';
-  document.getElementById('keyHint').style.display = 'none';
-  document.getElementById('emptyState').style.display = currentMode === 'topic' ? 'block' : 'none';
-}
+// ── KEYBOARD & TOUCH ──
+document.addEventListener('keydown',e=>{if(currentMode==='list'||currentMode==='quiz'||currentMode==='progress')return;if(e.key==='ArrowRight')nextCard();else if(e.key==='ArrowLeft')prevCard();else if(e.key===' '){e.preventDefault();flipCard();}});
+let tsx=0;document.getElementById('cardArea').addEventListener('touchstart',e=>{tsx=e.changedTouches[0].screenX;},{passive:true});document.getElementById('cardArea').addEventListener('touchend',e=>{const d=e.changedTouches[0].screenX-tsx;if(Math.abs(d)>60){d<0?nextCard():prevCard();}},{passive:true});
 
-function buildDeck() {
-  if (currentMode === 'all') {
-    deck = [...TERMS];
-  } else {
-    deck = TERMS.filter(t => selectedTopics.has(t.c));
-  }
-  shuffleArray(deck);
-  currentIndex = 0;
-  document.getElementById('emptyState').style.display = 'none';
-  document.getElementById('cardArea').style.display = 'block';
-  document.getElementById('controls').style.display = 'flex';
-  document.getElementById('progressBarContainer').style.display = 'block';
-  document.getElementById('keyHint').style.display = 'block';
-  showCard();
-}
-
-function shuffleArray(arr) {
-  for (let i = arr.length - 1; i > 0; i--) {
-    const j = Math.floor(Math.random() * (i + 1));
-    [arr[i], arr[j]] = [arr[j], arr[i]];
-  }
-}
-
-function showCard() {
-  const card = document.getElementById('card');
-  card.classList.remove('flipped');
-  const term = deck[currentIndex];
-  document.getElementById('cardTopic').textContent = term.c;
-  document.getElementById('cardTerm').textContent = term.t;
-  document.getElementById('cardTermBack').textContent = term.t;
-  document.getElementById('cardDef').textContent = term.d;
-  document.getElementById('progress').textContent = `${currentIndex + 1} / ${deck.length}`;
-  document.getElementById('progressFill').style.width = `${((currentIndex + 1) / deck.length) * 100}%`;
-  // Adjust card height to fit definition
-  requestAnimationFrame(() => {
-    const front = document.querySelector('.card-front');
-    const back = document.querySelector('.card-back');
-    const h = Math.max(260, front.scrollHeight, back.scrollHeight);
-    card.style.height = h + 'px';
-  });
-}
-
-function flipCard() {
-  document.getElementById('card').classList.toggle('flipped');
-}
-
-function nextCard() {
-  if (currentIndex < deck.length - 1) {
-    currentIndex++;
-    showCard();
-  }
-}
-
-function prevCard() {
-  if (currentIndex > 0) {
-    currentIndex--;
-    showCard();
-  }
-}
-
-function shuffleDeck() {
-  shuffleArray(deck);
-  currentIndex = 0;
-  showCard();
-}
-
-// Keyboard
-document.addEventListener('keydown', e => {
-  if (e.key === 'ArrowRight') nextCard();
-  else if (e.key === 'ArrowLeft') prevCard();
-  else if (e.key === ' ') { e.preventDefault(); flipCard(); }
-});
-
-// Touch swipe
-let touchStartX = 0;
-document.getElementById('cardArea').addEventListener('touchstart', e => {
-  touchStartX = e.changedTouches[0].screenX;
-}, {passive: true});
-document.getElementById('cardArea').addEventListener('touchend', e => {
-  const diff = e.changedTouches[0].screenX - touchStartX;
-  if (Math.abs(diff) > 60) {
-    if (diff < 0) nextCard();
-    else prevCard();
-  }
-}, {passive: true});
-
-// Start with all
+// ── INIT ──
+document.getElementById('flashcardFilter').style.display='flex';
 buildDeck();
 </script>
 
-<footer>
-  Vibe-codet av Fredrik Bedsvaag med god hjelp av Claude &middot; fredbeds@metis.no &middot; Sist oppdatert: 9. april 2026
-</footer>
-
+<footer>Vibe-codet av Fredrik Bedsvaag med god hjelp av Claude &middot; Markedsføring og ledelse 2</footer>
 </body>
 </html>
